@@ -5,3 +5,4 @@ Guías y material de clase:
 - [Paradigmas de programación](1.paradigmas-programacion.md)
 - [Introducción a Elixir](2.introduccion-elixir.md)
 - [Conceptos básicos de Elixir](3.conceptos-basicos-elixir.md)
+- [Expresiones lógico-matemáticas y estructuras de control](4.expresiones-logico-matematicas.md)
