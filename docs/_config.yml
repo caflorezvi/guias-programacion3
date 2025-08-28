@@ -1,5 +1,3 @@
 title: Programación III
 description: Material de apoyo para el espacio académico Programación III
 theme: minima
-plugins:
-  - jekyll-mathjax
