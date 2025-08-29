@@ -1,7 +1,7 @@
 defmodule Matematicas do
 
   def main do
-    dividir(10, 0) |> imprimir() |> IO.puts()
+    dividir(10, 9) |> imprimir() |> IO.puts()
   end
 
   def dividir(a,b) do
@@ -13,7 +13,7 @@ defmodule Matematicas do
 
   def imprimir({resp, valor}) do
     case resp do
-      :ok -> "El resultado es: #{valor}"
+      :ok -> "El resultado es: #{Float.round(valor, 2)}"
       :error -> "Error: #{valor}"
     end
   end
