@@ -7,3 +7,4 @@ Guías y material de clase:
 - [Conceptos básicos de Elixir](3.conceptos-basicos-elixir.md)
 - [Expresiones lógico-matemáticas y estructuras de control](4.expresiones-logico-matematicas.md)
 - [Colecciones en Elixir](5.colecciones.md)
+- [Structs](7.structs.md)
