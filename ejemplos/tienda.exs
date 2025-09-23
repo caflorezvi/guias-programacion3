@@ -56,14 +56,18 @@ defmodule Tienda do
     |> Enum.sort_by(&(&1.precio)) # Ordenamos por precio (por defecto ascendente)
   end
 
-  defp obtener_producto_caro_barato(lista) do
-    min = Enum.min_by(lista, &(&1.precio))
-    max = Enum.max_by(lista, &(&1.precio))
+  defp obtener_producto_caro_barato([primer | resto]) do
+    {min, max} =
+      Enum.reduce(resto, {primer, primer}, fn prod, {min, max} -> # Inicializamos min y max con el primer producto
+        nuevo_min = if prod.precio < min.precio, do: prod, else: min # Comparamos y actualizamos min
+        nuevo_max = if prod.precio > max.precio, do: prod, else: max # Comparamos y actualizamos max
+        {nuevo_min, nuevo_max} # Devolvemos la nueva tupla {min, max}
+      end)
 
-    tupla_barato = { :mas_barato, min.nombre, min.precio }
-    tupla_caro = { :mas_caro, max.nombre, max.precio }
+    tupla_barato = {:mas_barato, min.nombre, min.precio}
+    tupla_caro = {:mas_caro, max.nombre, max.precio}
 
-    { tupla_barato, tupla_caro }
+    {tupla_barato, tupla_caro}
   end
 
   defp agrupar_por_categoria(lista), do: Enum.group_by(lista, &(&1.categoria))
@@ -75,9 +79,13 @@ defmodule Tienda do
   end
 
   defp obtener_promedio_precio_categorias(lista) do
-    Enum.group_by(lista, &(&1.categoria), &(&1.precio)) # Agrupamos por categoría y extraemos solo el precio
-    |> Enum.map( fn {cat, lista} -> {cat, Enum.sum(lista) / Enum.count(lista) } end ) # Calculamos el promedio
-    |> Enum.into(%{}) # Convertimos la lista de tuplas en un mapa
+    lista
+    |> Enum.group_by(& &1.categoria, & &1.precio) # Agrupamos por categoría, pero solo obtenemos los precios
+    |> Enum.map(fn {cat, precios} ->
+      {suma, count} = Enum.reduce(precios, {0, 0}, fn p, {suma, count} -> {suma + p, count + 1} end) # Sumamos y contamos los precios
+      {cat, suma / count} # Calculamos el promedio
+    end)
+    |> Enum.into(%{})
   end
 
 end
