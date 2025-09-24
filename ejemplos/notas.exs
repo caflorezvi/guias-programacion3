@@ -12,15 +12,15 @@ defmodule Estudiantes do
 
     promedio = calcular_promedio(notas)
 
-    Util.imprimir_mensaje(promedio)
+    Util.imprimir(promedio)
 
     total_segun_promedio(notas, promedio)
     |>generar_mensaje()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
 
     obtener_nota_maxima_minima(notas)
     |> generar_mensaje_nota()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
 
     generar_lista_aprobados(notas)
     |> IO.inspect()

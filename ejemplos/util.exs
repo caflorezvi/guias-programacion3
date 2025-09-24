@@ -21,8 +21,8 @@ defmodule Util do
     case valor do
       {numero, _} -> numero
       :error ->
-        imprimir_error("Error. Se utilizará 0 como valor predeterminado.")
-        0
+        imprimir_error("El valor ingresado no es válido.")
+        leer_con_parser(mensaje, parser)
     end
   end
 
@@ -30,7 +30,7 @@ defmodule Util do
     IO.puts(:standard_error, mensaje)
   end
 
-  def imprimir_mensaje(mensaje) do
+  def imprimir(mensaje) do
     IO.puts(mensaje)
   end
 

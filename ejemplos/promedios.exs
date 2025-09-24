@@ -2,7 +2,7 @@ defmodule Notas do
   def main do
     Util.leer("Escriba 1 para calcular la nota definitiva del curso 1, o 2 para el curso 2: ", :integer)
     |> procesar_curso()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   defp procesar_curso(curso) when curso not in 1..2 do

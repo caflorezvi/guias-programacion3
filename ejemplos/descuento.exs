@@ -7,7 +7,7 @@ defmodule Descuento do
     precio_final = calcular_descuento(precio, descuento)
 
     generar_mensaje(precio, descuento, precio_final)
-    |> Util.imprimir_mensaje
+    |> Util.imprimir
 
   end
 

@@ -7,7 +7,7 @@ defmodule Calculadora do
 
     validar_operacion(numero1, numero2, operacion)
     |> generar_mensaje()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   def validar_operacion(numero1, numero2, operacion) when operacion in 1..4 do

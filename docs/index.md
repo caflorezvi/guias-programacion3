@@ -2,9 +2,11 @@ Este espacio académico se centra en estudiar todos los aspectos relacionados co
 
 Guías y material de clase:
 
+- [Proyecto Final](0.proyecto-final.md)
 - [Paradigmas de programación](1.paradigmas-programacion.md)
 - [Introducción a Elixir](2.introduccion-elixir.md)
 - [Conceptos básicos de Elixir](3.conceptos-basicos-elixir.md)
 - [Expresiones lógico-matemáticas y estructuras de control](4.expresiones-logico-matematicas.md)
 - [Colecciones en Elixir](5.colecciones.md)
+- [Recursividad](6.recursividad.md)
 - [Structs](7.structs.md)

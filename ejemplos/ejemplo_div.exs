@@ -3,7 +3,7 @@ defmodule Matematicas do
   def main do
     dividir(10, 67)
     |> crear_respuesta()
-    |> IO.puts()
+    |> Util.imprimir()
   end
 
   def dividir(a, b) do

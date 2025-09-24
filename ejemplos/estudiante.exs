@@ -10,7 +10,7 @@ defmodule Notas do
     es_aprobado = aprobado?(nota_final)
 
     generar_mensaje(es_aprobado, nota_final)
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
 
   end
 

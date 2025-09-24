@@ -7,7 +7,7 @@ defmodule Loteria do
 
     numero
     |> validar_y_jugar()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   defp validar_y_jugar(numero) when numero >= @minimo and numero <= @maximo do
