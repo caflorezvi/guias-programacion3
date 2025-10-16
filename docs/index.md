@@ -10,3 +10,5 @@ Guías y material de clase:
 - [Colecciones en Elixir](5.colecciones.md)
 - [Recursividad](6.recursividad.md)
 - [Structs](7.structs.md)
+- [Streams](8.streams.md)
+- [Manejo de archivos](9.archivos.md)
