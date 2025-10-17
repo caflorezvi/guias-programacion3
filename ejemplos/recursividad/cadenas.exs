@@ -11,7 +11,7 @@ defmodule Cadenas do
 
   def main do
     invertir("hola a todos")
-    |> Util.imprimir()
+    |> IO.puts()
   end
 end
 

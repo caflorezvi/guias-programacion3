@@ -15,11 +15,11 @@ defmodule Tienda do
 
     #Total del inventario
     total = calcular_inventario_total(lista)
-    Util.imprimir("La suma total es #{total}")
+    IO.puts("La suma total es #{total}")
 
     #Lista productos sin stock
     sin_stock = listar_productos_sin_stock(lista)
-    Util.imprimir("Los productos sin stock son #{Enum.join(sin_stock, ", ")}")
+    IO.puts("Los productos sin stock son #{Enum.join(sin_stock, ", ")}")
 
     #Lista productos por categoria (Accesorios) ordenados por precio
     productos_accesorios = listar_productos_categoria(lista, "Accesorios")

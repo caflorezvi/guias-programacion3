@@ -12,16 +12,16 @@ defmodule Estudiantes do
     ]
 
     promedio = calcular_promedio(lista)
-    Util.imprimir("El promedio es #{promedio}")
+    IO.puts("El promedio es #{promedio}")
 
     {menores, mayores} = total_segun_promedio(lista, promedio)
-    Util.imprimir("Hay #{menores} por debajo del promedio y #{mayores} por encima")
+    IO.puts("Hay #{menores} por debajo del promedio y #{mayores} por encima")
 
     {menor, mayor} = obtener_mejor_peor_nota(lista)
-    Util.imprimir("La nota más baja es de #{menor.nombre} (#{menor.nota}) y la más alta es de #{mayor.nombre} (#{mayor.nota})")
+    IO.puts("La nota más baja es de #{menor.nombre} (#{menor.nota}) y la más alta es de #{mayor.nombre} (#{mayor.nota})")
 
     {aprobados, reprobados} = aprobados_reprobados(lista)
-    Util.imprimir("Aprobaron #{aprobados} estudiantes y reprobaron #{reprobados}")
+    IO.puts("Aprobaron #{aprobados} estudiantes y reprobaron #{reprobados}")
 
     IO.inspect( ordenar_lista(lista) )
   end

@@ -22,7 +22,7 @@ defmodule Inventario do
     |> IO.inspect()
 
     filtrar_productos_rango(productos, 0, 3)
-    |> Util.imprimir()
+    |> IO.puts()
 
     crear_reporte(productos)
     |> IO.inspect()
