@@ -12,3 +12,4 @@ Guías y material de clase:
 - [Structs](7.structs.md)
 - [Streams](8.streams.md)
 - [Manejo de archivos](9.archivos.md)
+- [Procesos en Elixir](10.procesos.md)
