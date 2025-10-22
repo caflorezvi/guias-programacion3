@@ -3,6 +3,7 @@ defmodule Frecuencia do
   @output "frecuencia.txt"
 
   def main do
+    # with para manejar múltiples operaciones que pueden fallar
     with {:ok, contenido} <- File.read(@input),
          {:ok, resultado} <- contar_frecuencia(contenido),
          :ok <- File.write(@output, resultado) do
@@ -14,14 +15,10 @@ defmodule Frecuencia do
   end
 
   def contar_frecuencia(contenido) when is_binary(contenido) do
-    resultado =
-      contenido
-      |> String.downcase()
-      |> String.split()
-      |> Enum.frequencies()
-      |> Enum.map_join("\n", fn {palabra, frecuencia} ->
-        "#{palabra}: #{frecuencia}"
-      end)
+    resultado = String.downcase() # Convertir a minúsculas
+    |> String.split() # Dividir en palabras
+    |> Enum.frequencies() # Contar frecuencias
+    |> Enum.map_join("\n", fn {palabra, frecuencia} -> "#{palabra}: #{frecuencia}" end) # Formatear resultado y unir en una cadena de texto
 
     {:ok, resultado}
   end
