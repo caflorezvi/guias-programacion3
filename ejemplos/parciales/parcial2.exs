@@ -49,16 +49,17 @@ defmodule Taller do
   end
 
   def agrupar_rango_km(productos) do
-    {menores, intermedio, mayores} =
-      Enum.reduce(productos, {%{}, %{}, %{}}, fn {placa, vehiculo}, {m1, m2, m3} ->
-        cond do
-          vehiculo.kilometraje < 50_000 -> {Map.put(m1, placa, vehiculo), m2, m3}
-          vehiculo.kilometraje <= 100_000 -> {m1, Map.put(m2, placa, vehiculo), m3}
-          true -> {m1, m2, Map.put(m3, placa, vehiculo)}
-        end
-      end)
+    Enum.reduce(productos, {%{}, %{}, %{}}, fn {placa, vehiculo}, {m1, m2, m3} ->
+      cond do
+        vehiculo.kilometraje < 50_000 -> {Map.put(m1, placa, vehiculo), m2, m3}
+        vehiculo.kilometraje <= 100_000 -> {m1, Map.put(m2, placa, vehiculo), m3}
+        true -> {m1, m2, Map.put(m3, placa, vehiculo)}
+      end
+    end)
+    |> then(fn {poco, intermedio, mucho} ->
+      %{"poco" => poco, "intermedio" => intermedio, "mucho" => mucho}
+    end)
 
-    %{"menores" => menores, "intermedio" => intermedio, "mayores" => mayores}
   end
 
   def obtener_servicios_comunes(inventario) do
@@ -153,6 +154,8 @@ defmodule Listas do
     end
   end
 end
+
+Taller.main()
 
 #IO.inspect(Listas.contiene?([2, 4, 7, 7, 10, 8, 41, 2], [7, 10, 8]))
 #IO.inspect(ListaSinVocales.crear_lista(["ventana", "elefante", "avion", "umbrella"]))
