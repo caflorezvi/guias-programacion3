@@ -1,4 +1,3 @@
-# ====== Servidor de tareas ======
 defmodule TareasServidor do
   use GenServer
 
@@ -10,12 +9,6 @@ defmodule TareasServidor do
   def init(state), do: {:ok, state}
 
   # ---- Callbacks ----
-  def handle_cast({:agregar_tarea, usuario, tarea}, state) do
-    tareas_usuario = Map.get(state, usuario, [])
-    nuevas_tareas = [tarea | tareas_usuario]
-    {:noreply, Map.put(state, usuario, nuevas_tareas)}
-  end
-
   def handle_cast({:eliminar_tarea, usuario, titulo}, state) do
     nuevas_tareas =
       state
@@ -25,21 +18,35 @@ defmodule TareasServidor do
     {:noreply, Map.put(state, usuario, nuevas_tareas)}
   end
 
+  def handle_call({:agregar_tarea, usuario, tarea}, _from, state) do
+    IO.puts("Se ha enviado una nueva tarea desde un cliente")
+    tareas_usuario = Map.get(state, usuario, [])
+    nuevas_tareas = [tarea | tareas_usuario]
+    nuevo_estado = Map.put(state, usuario, nuevas_tareas)
+
+    {:reply, :ok, nuevo_estado}
+  end
+
   def handle_call({:listar_tareas, usuario}, _from, state) do
     {:reply, Map.get(state, usuario, []), state}
   end
 
   def main do
 
-    # Imprimir el nombre del nodo
-    IO.puts(Node.self())
+    # Crear un nodo servidor
+    #{:ok, _} = Node.start(:"servidor_tareas@192.168.1.20", :longnames)
+    {:ok, _} = Node.start(:servidor_tareas@localhost, :shortnames)
+
+    # Establece la cookie
+    Node.set_cookie(:mi_cookie)
 
     # Iniciar el servidor de tareas
     {:ok, _} = start_link()
-    IO.puts("🚀 Servidor de tareas iniciado")
+    IO.puts("Servidor de tareas iniciado")
 
-    # Mantener el proceso principal vivo
-    Process.sleep(:infinity)
+    # Mantener vivo el proceso principal
+    :timer.sleep(:infinity)
+
   end
 
 end

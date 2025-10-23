@@ -15,7 +15,7 @@ defmodule TareasCliente do
 
   # ---- API pública ----
   def agregar_tarea(usuario, %Tarea{} = tarea) do
-    GenServer.cast(__MODULE__, {:agregar_tarea, usuario, tarea})
+    GenServer.call(__MODULE__, {:agregar_tarea, usuario, tarea})
   end
 
   def eliminar_tarea(usuario, titulo) do
@@ -27,14 +27,15 @@ defmodule TareasCliente do
   end
 
   # ---- Callbacks ----
-  def handle_cast({:agregar_tarea, usuario, tarea}, server_node) do
-    GenServer.cast({TareasServidor, server_node}, {:agregar_tarea, usuario, tarea})
-    {:noreply, server_node}
-  end
-
   def handle_cast({:eliminar_tarea, usuario, titulo}, server_node) do
     GenServer.cast({TareasServidor, server_node}, {:eliminar_tarea, usuario, titulo})
     {:noreply, server_node}
+  end
+
+  def handle_call({:agregar_tarea, usuario, tarea}, _from, server_node) do
+    respuesta = GenServer.call({TareasServidor, server_node}, {:agregar_tarea, usuario, tarea})
+    {:reply, respuesta, server_node}
+    #{:noreply, server_node}
   end
 
   def handle_call({:listar_tareas, usuario}, _from, server_node) do
@@ -44,27 +45,31 @@ defmodule TareasCliente do
 
   def main do
 
-    # Nombre del nodo servidor (ajustar según sea necesario)
-    server_node = :'servidor@Mac-mini-de-Carlos'
+    # Generar nombre único para el cliente unique_id = UUID.uuid4()
+    id_unico = System.unique_integer([:positive])
+    nombre_nodo = String.to_atom("cliente_tareas_#{id_unico}@localhost")
+
+    # 🚀 Iniciar el nodo cliente
+    {:ok, _} = Node.start(nombre_nodo, :shortnames)
+    Node.set_cookie(:mi_cookie)
 
     IO.puts("💻 Nodo cliente iniciado")
 
     # Conectarse al servidor y arrancar el cliente
-    {:ok, _pid} = start_link(server_node)
+    {:ok, _pid} = start_link(:servidor_tareas@localhost)
 
     # ====== Ejemplo automático de uso ======
-    agregar_tarea("usuario1", %Tarea{titulo: "Comprar leche", descripcion: "Ir al supermercado"})
-    agregar_tarea("usuario1", %Tarea{titulo: "Estudiar Elixir", descripcion: "Leer la guía oficial"})
+    #IO.inspect(agregar_tarea("usuario1", %Tarea{titulo: "Comprar leche", descripcion: "Ir al supermercado"}))
+    #agregar_tarea("usuario1", %Tarea{titulo: "Estudiar Elixir", descripcion: "Leer la guía oficial"})
     IO.inspect(listar_tareas("usuario1"))
 
   end
+
 end
 
 TareasCliente.main()
 
 # ====== Arranque automático del nodo cliente ======
-
-
 
 #{:ok, _} = Node.start(:cliente)
 #Node.set_cookie(:mi_cookie)
