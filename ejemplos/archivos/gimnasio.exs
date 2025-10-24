@@ -78,6 +78,9 @@ defmodule Gimnasio do
 end
 
 defmodule GestionArchivos do
+  @moduledoc """
+  Módulo para gestionar la lectura y escritura de socios en archivos de texto.
+  """
 
   @archivo "socios.txt"
 
@@ -88,10 +91,7 @@ defmodule GestionArchivos do
   """
   def guardar_socios(socios) do
     # Convertir el mapa de socios a líneas de texto
-    contenido =
-      Enum.map(socios, fn {cedula, socio} -> convertir_a_linea(cedula, socio) end)
-      |> Enum.join("\n")
-
+    contenido = Enum.map_join(socios, "\n", fn {cedula, socio} -> convertir_a_linea(cedula, socio) end)
     # Escribir el contenido al archivo
     File.write!(@archivo, contenido)
   end

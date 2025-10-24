@@ -31,11 +31,14 @@ defmodule Inventario do
   end
 
   defp convertir_linea(linea) do
+    # Dividir la línea en nombre, precio y cantidad
     [nombre, precio, cantidad] = String.trim(linea) |> String.split(",")
 
+    # Convertir precio y cantidad a enteros
     {precio_num, _} = Integer.parse(precio)
     {cantidad_num, _} = Integer.parse(cantidad)
 
+    # Retornar un mapa con los datos del producto
     %{nombre: nombre, precio: precio_num, cantidad: cantidad_num }
   end
 
