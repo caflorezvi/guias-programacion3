@@ -13,3 +13,4 @@ Guías y material de clase:
 - [Streams](8.streams.md)
 - [Manejo de archivos](9.archivos.md)
 - [Procesos en Elixir](10.procesos.md)
+- [Aplicaciones distribuidas](11.nodos-dist.md)
