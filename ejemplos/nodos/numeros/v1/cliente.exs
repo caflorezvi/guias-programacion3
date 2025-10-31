@@ -1,21 +1,24 @@
 defmodule Cliente do
-  @servidor :servidor@localhost
+  @nombre_servidor :servidor@localhost
+  @nombre_proceso :principal
   @timeout 10000
 
   def main do
-    Node.start(crear_nombre_unico(), :shortnames)
+    Node.start( crear_nombre_nodo() |> String.to_atom(), :shortnames)
     Node.set_cookie(:cookie)
 
+    IO.puts("Cliente iniciado en #{node()}")
     IO.puts("Intentando conectar al servidor...")
 
-    conectar_servidor(Node.connect(@servidor))
+    conectar_servidor(Node.connect(@nombre_servidor))
 
     IO.puts("Conexión finalizada")
   end
 
-  def crear_nombre_unico do
-    random_suffix = :erlang.unique_integer([:positive])
-    String.to_atom("cliente_#{random_suffix}@localhost")
+  # Crear un nombre único para el nodo del cliente
+  def crear_nombre_nodo do
+    uuid = :crypto.strong_rand_bytes(8) |> Base.encode16(case: :lower)
+    "cliente_#{uuid}@localhost"
   end
 
   def conectar_servidor(true) do
@@ -24,60 +27,60 @@ defmodule Cliente do
     esperar_respuesta()
   end
 
-  def conectar_servidor(false) do
-    IO.puts("No se pudo conectar al servidor")
-  end
+  def conectar_servidor(false), do: IO.puts("No se pudo conectar al servidor")
 
   def pedir_numeros do
     IO.puts("\nBienvenido cliente")
     IO.puts("Opciones disponibles:")
-    IO.puts("1 - Sumar y calcular promedio")
-    IO.puts("2 - Filtrar números pares")
-    IO.puts("3 - Ejecutar tarea costosa\n")
+    IO.puts("1 - Sumar los números")
+    IO.puts("2 - Calcular el promedio")
+    IO.puts("3 - Filtrar números pares")
+    IO.puts("4 - Ejecutar tarea costosa\n")
 
-    opcion = IO.gets("Seleccione una opción (1-3): ") |> String.trim()
+    opcion = IO.gets("Seleccione una opción (1-4): ") |> String.trim()
     {opcion, crear_lista([])}
   end
 
   def enviar_peticion({"1", lista}) do
-    send({:principal, @servidor}, {:procesar_lista, self(), lista})
+    send({@nombre_proceso, @nombre_servidor}, {:sumar_numeros, self(), lista})
   end
 
   def enviar_peticion({"2", lista}) do
-    send({:principal, @servidor}, {:filtrar_pares, self(), lista})
+    send({@nombre_proceso, @nombre_servidor}, {:calcular_promedio, self(), lista})
   end
 
-  def enviar_peticion({"3", _lista}) do
-    send({:principal, @servidor}, {:tarea_costosa, self()})
+  def enviar_peticion({"3", lista}) do
+    send({@nombre_proceso, @nombre_servidor}, {:filtrar_pares, self(), lista})
+  end
+
+  def enviar_peticion({"4", _lista}) do
+    send({@nombre_proceso, @nombre_servidor}, {:tarea_costosa, self()})
   end
 
   def enviar_peticion({opcion, _lista}) do
     IO.puts("Opción inválida: #{opcion}")
-    send({:principal, @servidor}, {:opcion_invalida, self()})
   end
 
   def esperar_respuesta do
     receive do
-      {:lista_procesada, {suma, promedio}} ->
+      {:resultado_suma, suma} ->
         IO.puts("\nResultado recibido:")
         IO.puts("  Suma: #{suma}")
-        IO.puts("  Promedio: #{promedio}")
 
-      {:lista_procesada, :error} ->
+      {:resultado_promedio, :error} ->
         IO.puts("\nError: No se puede procesar una lista vacía")
+
+      {:resultado_promedio, promedio} ->
+        IO.puts("\nResultado recibido:")
+        IO.puts("  Promedio: #{promedio}")
 
       {:lista_filtrada, lista} ->
         IO.puts("\nNúmeros pares filtrados:")
         IO.inspect(lista)
 
-      {:error, mensaje} ->
-        IO.puts("\nError del servidor: #{mensaje}")
-
       :tarea_completada ->
         IO.puts("\nLa tarea costosa terminó exitosamente")
 
-      :opcion_invalida ->
-        IO.puts("\nEl servidor rechazó la opción enviada")
     after
       @timeout ->
         IO.puts("\nTimeout: El servidor no respondió en #{@timeout}ms")
@@ -90,12 +93,10 @@ defmodule Cliente do
     case valor do
       "fin" ->
         Enum.reverse(lista)
-
       _ ->
         case Integer.parse(valor) do
           {num, _} ->
             crear_lista([num | lista])
-
           :error ->
             IO.puts("Error: Solo se aceptan números enteros")
             crear_lista(lista)

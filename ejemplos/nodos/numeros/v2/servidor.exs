@@ -21,17 +21,27 @@ defmodule Servidor do
   end
 
   # Petición síncrona (el servidor espera responderle al usuario con algo en la mayoría de los casos)
-  def handle_call({:procesar_lista, lista}, _from, state) do
-    respuesta = generar_respuesta(lista)
+  def handle_call({:sumar_numeros, lista}, _from, state) do
+    IO.puts("[#{timestamp()}] Petición: sumar_numeros")
+    respuesta = sumar_numeros(lista)
+    {:reply, respuesta, state}
+  end
+
+  def handle_call({:calcular_promedio, lista}, _from, state) do
+    IO.puts("[#{timestamp()}] Petición: calcular_promedio")
+    respuesta = calcular_promedio(lista)
     {:reply, respuesta, state}
   end
 
   def handle_call({:filtar_pares, lista}, _from, state) do
+    IO.puts("[#{timestamp()}] Petición: filtrar_pares")
     respuesta = filtrar_pares(lista)
     {:reply, respuesta, state}
   end
 
   def handle_call(:tarea_costosa, from, state) do
+    IO.puts("[#{timestamp()}] Petición: tarea_costosa")
+    # Se inicia una tarea asíncrona para no bloquear el servidor mientras se realiza la tarea costosa
     Task.start(fn ->
       :timer.sleep(50000)
       GenServer.reply(from, :ok)
@@ -39,16 +49,14 @@ defmodule Servidor do
     {:noreply, state}
   end
 
-  # Peticiones asíncronas (el servidor NO espera respoderle al usuario)
-  #def handle_cast(request, state) do
-  #end
+  defp filtrar_pares(lista), do: Enum.filter(lista, fn el -> rem(el, 2) == 0 end)
+  defp sumar_numeros(lista), do: Enum.sum(lista)
+  defp calcular_promedio([]), do: :error
+  defp calcular_promedio(lista), do: Enum.sum(lista) / length(lista)
+  def hacer_tarea_costosa(), do: :timer.sleep(50000)
 
-  def filtrar_pares(lista), do: Enum.filter(lista, fn el -> rem(el, 2) == 0 end )
-
-  def generar_respuesta([]), do: :error
-  def generar_respuesta(lista) do
-    suma = Enum.sum(lista)
-    { suma, suma / length(lista) }
+  defp timestamp do
+    Time.utc_now() |> Time.to_string() |> String.slice(0..7)
   end
 
 end
