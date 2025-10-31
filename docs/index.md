@@ -14,3 +14,4 @@ Guías y material de clase:
 - [Manejo de archivos](9.archivos.md)
 - [Procesos en Elixir](10.procesos.md)
 - [Aplicaciones distribuidas](11.nodos-dist.md)
+- [OTP y GenServer](12.otp.md)
