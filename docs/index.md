@@ -15,3 +15,4 @@ Guías y material de clase:
 - [Procesos en Elixir](10.procesos.md)
 - [Aplicaciones distribuidas](11.nodos-dist.md)
 - [OTP y GenServer](12.otp.md)
+- [Mix](13.mix.md)
