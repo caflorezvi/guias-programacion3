@@ -2,7 +2,6 @@ Este espacio académico se centra en estudiar todos los aspectos relacionados co
 
 Guías y material de clase:
 
-- [Proyecto Final](0.proyecto-final.md)
 - [Paradigmas de programación](01.paradigmas-programacion.md)
 - [Introducción a Elixir](02.introduccion-elixir.md)
 - [Programación Funcional](03.programacion-funcional.md)
@@ -14,6 +13,7 @@ Guías y material de clase:
 - [Streams](09.streams.md)
 - [Manejo de archivos](10.archivos.md)
 - [Procesos en Elixir](11.procesos.md)
-- [Aplicaciones distribuidas](12.nodos-dist.md)
-- [OTP y GenServer](13.otp.md)
-- [Mix](14.mix.md)
+- [Aplicaciones distribuidas 1](12.nodos-dist-1.md)
+- [Aplicaciones distribuidas 2](13.nodos-dist-2.md)
+- [OTP y GenServer](14.otp.md)
+- [Mix](15.mix.md)
