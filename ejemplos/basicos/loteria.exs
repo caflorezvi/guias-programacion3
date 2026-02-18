@@ -3,36 +3,27 @@ defmodule Loteria do
   @maximo 10
 
   def main do
-    numero = Util.leer("Ingrese un número entre #{@minimo} y #{@maximo}: ", :integer)
-
-    numero
-    |> validar_y_jugar()
+    "Ingrese un número entre #{@minimo} y #{@maximo}: "
+    |> Util.leer(:integer)
+    |> jugar()
     |> Util.imprimir()
   end
 
-  defp validar_y_jugar(numero) when numero >= @minimo and numero <= @maximo do
-    ejecutar_sorteo(numero)
+  defp jugar(numero) when numero >= @minimo and numero <= @maximo do
+    numero
+    |> calcular_diferencia()
+    |> evaluar_resultado()
   end
 
-  defp validar_y_jugar(_numero), do: "Número no válido, fin del juego."
+  defp jugar(_), do: "Número no válido, fin del juego."
 
-  defp ejecutar_sorteo(numero_usuario) do
-    numero_ganador = :rand.uniform(@maximo)
-    diferencia = abs(numero_usuario - numero_ganador)
-    evaluar_resultado(diferencia)
+  defp calcular_diferencia(numero_usuario) do
+    numero_ganador = :rand.uniform(@maximo) # Genera un número aleatorio entre 1 y @maximo
+    abs(numero_usuario - numero_ganador) # Devuelve el valor absoluto de la diferencia
   end
 
-  defp evaluar_resultado(diferencia) do
-    case diferencia do
-      0 -> mostrar_victoria()
-      _ -> mostrar_derrota(diferencia)
-    end
-  end
-
-  defp mostrar_victoria, do: "¡Felicidades, has ganado!"
-
-  defp mostrar_derrota(diferencia), do: "Lo siento, has perdido. La diferencia fue de #{diferencia}."
-
+  defp evaluar_resultado(0), do: "¡Felicidades, has ganado!"
+  defp evaluar_resultado(diferencia), do: "Lo siento, has perdido. La diferencia fue de #{diferencia}."
 end
 
 Loteria.main()
