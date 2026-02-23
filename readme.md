@@ -5,4 +5,4 @@ En este repositorio se almacenarán todos los documentos, guías de apoyo y recu
 Su objetivo es proporcionar material de referencia que facilite el aprendizaje, refuerce los conceptos estudiados y sirva como guía práctica para la implementación de soluciones en Elixir.
 
 ---
-Universidad del Quindío 💚 - 2025 
+Universidad del Quindío 💚 - 2026 
