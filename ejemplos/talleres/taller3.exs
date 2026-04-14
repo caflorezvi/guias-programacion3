@@ -111,7 +111,7 @@ end
 # ============================================================================
 # Un número perfecto es aquel cuya suma de divisores propios es igual a sí mismo.
 # Usa sumar_divisores/3 con un acumulador para recorrer los posibles divisores
-# desde 1 hasta n/2.
+# desde 1 hasta num/2.
 #
 # --- es_perfecto?(26) ---
 #   es_perfecto?(26) -> 26 > 1, entonces: sumar_divisores(26, 1, 0) == 26 ?
@@ -137,15 +137,15 @@ end
 # ============================================================================
 defmodule Perfecto do
   def main do
-    IO.puts(es_perfecto?(26))
+    IO.puts(es_perfecto?(28))
   end
 
-  def es_perfecto?(n) when n <= 1, do: false
-  def es_perfecto?(n), do: sumar_divisores(n, 1, 0) == n
+  def es_perfecto?(num) when num <= 1, do: false
+  def es_perfecto?(num), do: sumar_divisores(num, 1, 0) == num
 
-  defp sumar_divisores(n, d, acc) when d > div(n, 2), do: acc
-  defp sumar_divisores(n, d, acc) when rem(n, d) == 0, do: sumar_divisores(n, d + 1, acc + d)
-  defp sumar_divisores(n, d, acc), do: sumar_divisores(n, d + 1, acc)
+  defp sumar_divisores(num, divisor, acc) when divisor > div(num, 2), do: acc
+  defp sumar_divisores(num, divisor, acc) when rem(num, divisor) == 0, do: sumar_divisores(num, divisor + 1, acc + divisor)
+  defp sumar_divisores(num, divisor, acc), do: sumar_divisores(num, divisor + 1, acc)
 end
 
 # ============================================================================
@@ -225,7 +225,7 @@ end
 # ============================================================================
 defmodule NumeroReversible do
   def main do
-    IO.puts(es_reversible?(10))
+    IO.puts(es_reversible?(63))
   end
 
   def es_reversible?(num) when num < 0 or rem(num, 10) == 0, do: false
@@ -242,7 +242,6 @@ defmodule NumeroReversible do
 
   defp validar_impar(num) do
     digito = rem(num, 10)
-
     if rem(digito, 2) != 0 do
       validar_impar(div(num, 10))
     else
@@ -251,4 +250,4 @@ defmodule NumeroReversible do
   end
 end
 
-Potencia.main()
+Perfecto.main()
