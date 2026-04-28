@@ -1,0 +1,22 @@
+{
+  "123": {
+    "nombre": "Juan Pérez Gómez",
+    "edad": 31,
+    "clases": [
+      "Pilates",
+      "Yoga"
+    ]
+  },
+  "456": {
+    "nombre": "María García",
+    "edad": 25,
+    "clases": [
+      "Spinning"
+    ]
+  },
+  "789": {
+    "nombre": "Carlos López",
+    "edad": 35,
+    "clases": []
+  }
+}
