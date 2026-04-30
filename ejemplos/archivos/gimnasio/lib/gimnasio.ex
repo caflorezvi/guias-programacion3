@@ -1,45 +1,13 @@
 defmodule Gimnasio do
-  @primera_vez false
 
   def main do
-    # Inicializar
-    socios = GestionArchivos.cargar_socios()
 
-    if @primera_vez do
-      # Agregar socios
-      {:ok, socios} = agregar_socio(socios, "123", "Juan Pérez", 30)
-      {:ok, socios} = agregar_socio(socios, "456", "María García", 25)
-      {:ok, socios} = agregar_socio(socios, "789", "Carlos López", 35)
-
-      # Intentar agregar duplicado
-      case agregar_socio(socios, "123", "Otro Juan", 28) do
-        {:error, :cedula_duplicada} ->
-          IO.puts("No se puede agregar: cédula duplicada")
-
-        {:ok, _} ->
-          IO.puts("Socio agregado")
+    # Crear datos de prueba solo cuando no existe el archivo
+    socios =
+      case GestionArchivos.cargar_socios() do
+        map when map_size(map) == 0 -> crear_datos_prueba(map)
+        map -> map
       end
-
-      # Inscribir en clases
-      {:ok, socios} = inscribir_clase(socios, "123", "Yoga")
-      {:ok, socios} = inscribir_clase(socios, "123", "Pilates")
-      {:ok, socios} = inscribir_clase(socios, "456", "Spinning")
-
-      # Intentar inscribir duplicado
-      case inscribir_clase(socios, "123", "Yoga") do
-        {:error, :ya_inscrito} ->
-          IO.puts("Ya está inscrito en esa clase")
-
-        {:ok, _} ->
-          IO.puts("Inscrito en clase")
-      end
-
-      # Actualizar socio
-      #{:ok, socios} = actualizar_socio(socios, "123", "Juan Pérez Gómez", 31)
-
-      # Eliminar socio
-      # {:ok, socios} = eliminar_socio(socios, "789")
-    end
 
     # Mostrar información
     case obtener_socio(socios, "123") do
@@ -63,6 +31,43 @@ defmodule Gimnasio do
 
     # Mostrar todos
     IO.inspect(listar_socios(socios))
+  end
+
+  def crear_datos_prueba(socios) do
+    # Agregar socios
+    {:ok, socios} = agregar_socio(socios, "123", "Juan Pérez", 30)
+    {:ok, socios} = agregar_socio(socios, "456", "María García", 25)
+    {:ok, socios} = agregar_socio(socios, "789", "Carlos López", 35)
+
+    # Intentar agregar duplicado
+    case agregar_socio(socios, "123", "Otro Juan", 28) do
+      {:error, :cedula_duplicada} ->
+        IO.puts("No se puede agregar: cédula duplicada")
+
+      {:ok, _} ->
+        IO.puts("Socio agregado")
+    end
+
+    # Inscribir en clases
+    {:ok, socios} = inscribir_clase(socios, "123", "Yoga")
+    {:ok, socios} = inscribir_clase(socios, "123", "Pilates")
+    {:ok, socios} = inscribir_clase(socios, "456", "Spinning")
+
+    # Intentar inscribir duplicado
+    case inscribir_clase(socios, "123", "Yoga") do
+      {:error, :ya_inscrito} ->
+        IO.puts("Ya está inscrito en esa clase")
+
+      {:ok, _} ->
+        IO.puts("Inscrito en clase")
+    end
+
+    # Actualizar socio
+    #{:ok, socios} = actualizar_socio(socios, "123", "Juan Pérez Gómez", 31)
+
+    # Eliminar socio
+    # {:ok, socios} = eliminar_socio(socios, "789")
+    socios
   end
 
   def agregar_socio(socios, cedula, nombre, edad) do

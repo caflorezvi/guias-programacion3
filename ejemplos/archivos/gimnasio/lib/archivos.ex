@@ -9,20 +9,12 @@ defmodule GestionArchivos do
     datos =
       socios
       |> Enum.map(fn {cedula, socio} ->
-        {cedula, socio_a_map(socio)}
+        {cedula, Map.from_struct(socio)}
       end)
       |> Enum.into(%{})
 
     json = Jason.encode!(datos, pretty: true)
     File.write!(@archivo, json)
-  end
-
-  defp socio_a_map(%Socio{nombre: n, edad: e, clases: c}) do
-    %{
-      nombre: n,
-      edad: e,
-      clases: c
-    }
   end
 
   @doc """
