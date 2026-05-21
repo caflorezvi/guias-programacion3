@@ -1,2 +1,18 @@
 title: Programación III
 description: Material de apoyo para el espacio académico Programación III
+author: Carlos Andrés Flórez Villarraga
+lang: es
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
