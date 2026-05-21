@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="470" viewBox="0 0 700 470" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="Paradigmas de programación">
+  <title>Paradigmas de programación</title>
+  <desc>Árbol horizontal de paradigmas de programación. La raíz se ramifica en imperativo (cómo hacerlo) y declarativo (qué hacer). Imperativo lleva a procedimental y orientado a objetos; declarativo lleva a funcional y lógico. Cada subparadigma conecta con un recuadro de descripción y lenguajes representativos.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Solid edges: Root -> branches -->
+  <path d="M150 230 C 165 230, 165 120, 178 120" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M150 230 C 165 230, 165 340, 178 340" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Solid edges: Imperativo -> Procedimental / POO -->
+  <path d="M310 120 C 330 120, 330 70, 348 70" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 120 C 330 120, 330 170, 348 170" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Solid edges: Declarativo -> Funcional / Lógico -->
+  <path d="M310 340 C 330 340, 330 290, 348 290" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 340 C 330 340, 330 390, 348 390" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Dotted edges: Sub -> Detail -->
+  <line x1="470" y1="70"  x2="508" y2="70"  stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <line x1="470" y1="170" x2="508" y2="170" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <line x1="470" y1="290" x2="508" y2="290" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <line x1="470" y1="390" x2="508" y2="390" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+
+  <!-- Root -->
+  <rect x="20" y="208" width="130" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="85" y="226" text-anchor="middle" fill="#2C2C2A" font-size="12" font-weight="500">Paradigmas de</text>
+  <text x="85" y="241" text-anchor="middle" fill="#2C2C2A" font-size="12" font-weight="500">programación</text>
+
+  <!-- Imperativo -->
+  <rect x="180" y="97" width="130" height="46" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+  <text x="245" y="117" text-anchor="middle" fill="#791F1F" font-size="12" font-weight="500">Imperativo</text>
+  <text x="245" y="132" text-anchor="middle" fill="#A32D2D" font-size="11" font-style="italic">(Cómo hacerlo)</text>
+
+  <!-- Declarativo -->
+  <rect x="180" y="317" width="130" height="46" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="245" y="337" text-anchor="middle" fill="#0C447C" font-size="12" font-weight="500">Declarativo</text>
+  <text x="245" y="352" text-anchor="middle" fill="#185FA5" font-size="11" font-style="italic">(Qué hacer)</text>
+
+  <!-- Subparadigms -->
+  <rect x="350" y="50" width="120" height="40" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="410" y="74" text-anchor="middle" fill="#2C2C2A" font-size="12">Procedimental</text>
+
+  <rect x="350" y="150" width="120" height="40" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="410" y="166" text-anchor="middle" fill="#2C2C2A" font-size="11">Orientado a</text>
+  <text x="410" y="180" text-anchor="middle" fill="#2C2C2A" font-size="11">Objetos (POO)</text>
+
+  <rect x="350" y="270" width="120" height="40" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="410" y="294" text-anchor="middle" fill="#2C2C2A" font-size="12">Funcional (FP)</text>
+
+  <rect x="350" y="370" width="120" height="40" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="410" y="394" text-anchor="middle" fill="#2C2C2A" font-size="12">Lógico</text>
+
+  <!-- Detail boxes -->
+  <rect x="510" y="48" width="170" height="44" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="595" y="66" text-anchor="middle" fill="#2C2C2A" font-size="10">Secuencias de instrucciones</text>
+  <text x="595" y="79" text-anchor="middle" fill="#2C2C2A" font-size="10">(C, Pascal)</text>
+
+  <rect x="510" y="148" width="170" height="44" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="595" y="166" text-anchor="middle" fill="#2C2C2A" font-size="9">Objetos, mensajes, estado encapsulado</text>
+  <text x="595" y="179" text-anchor="middle" fill="#2C2C2A" font-size="10">(Java, C++, Python)</text>
+
+  <rect x="510" y="268" width="170" height="44" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="595" y="286" text-anchor="middle" fill="#2C2C2A" font-size="10">Funciones puras, inmutabilidad</text>
+  <text x="595" y="299" text-anchor="middle" fill="#2C2C2A" font-size="10">(Elixir, Haskell, Lisp)</text>
+
+  <rect x="510" y="368" width="170" height="44" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+  <text x="595" y="386" text-anchor="middle" fill="#2C2C2A" font-size="10">Hechos y reglas lógicas</text>
+  <text x="595" y="399" text-anchor="middle" fill="#2C2C2A" font-size="10">(Prolog)</text>
+</svg>
