@@ -7,7 +7,7 @@
 
   --radius: 8px;
   --radius-sm: 6px;
-  --max-width: 860px;
+  --max-width: 960px;
   --transition: 0.2s ease;
 }
 
@@ -289,7 +289,7 @@ body {
   padding: 1rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  font-size: 85%;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 
