@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="470" viewBox="0 0 700 470" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="Paradigmas de programación">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 42 672 376" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="Paradigmas de programación">
   <title>Paradigmas de programación</title>
   <desc>Árbol horizontal de paradigmas de programación. La raíz se ramifica en imperativo (cómo hacerlo) y declarativo (qué hacer). Imperativo lleva a procedimental y orientado a objetos; declarativo lleva a funcional y lógico. Cada subparadigma conecta con un recuadro de descripción y lenguajes representativos.</desc>
   <defs>
@@ -8,16 +8,16 @@
   </defs>
 
   <!-- Solid edges: Root -> branches -->
-  <path d="M150 230 C 165 230, 165 120, 178 120" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M150 230 C 165 230, 165 340, 178 340" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M150 230 C 178 230, 150 120, 178 120" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M150 230 C 178 230, 150 340, 178 340" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Solid edges: Imperativo -> Procedimental / POO -->
-  <path d="M310 120 C 330 120, 330 70, 348 70" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M310 120 C 330 120, 330 170, 348 170" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 120 C 348 120, 310 70, 348 70" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 120 C 348 120, 310 170, 348 170" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Solid edges: Declarativo -> Funcional / Lógico -->
-  <path d="M310 340 C 330 340, 330 290, 348 290" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M310 340 C 330 340, 330 390, 348 390" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 340 C 348 340, 310 290, 348 290" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M310 340 C 348 340, 310 390, 348 390" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Dotted edges: Sub -> Detail -->
   <line x1="470" y1="70"  x2="508" y2="70"  stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
