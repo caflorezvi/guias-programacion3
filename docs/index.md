@@ -17,3 +17,7 @@ Guías y material de clase:
 - [Aplicaciones distribuidas 2](13.nodos-dist-2.md)
 - [OTP y GenServer](14.otp.md)
 - [Mix](15.mix.md)
+
+## Proyecto final
+
+- [Proyecto final - Batallas Pokémon](0.proyecto-final.md)
