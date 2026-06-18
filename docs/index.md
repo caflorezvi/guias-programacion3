@@ -16,7 +16,8 @@ Guías y material de clase:
 - [Aplicaciones distribuidas 1](12.nodos-dist-1.md)
 - [Aplicaciones distribuidas 2](13.nodos-dist-2.md)
 - [OTP y GenServer](14.otp.md)
-- [Mix](15.mix.md)
+- [Supervisores](15.supervisores.md)
+- [Mix](16.mix.md)
 
 ## Proyecto final
 
