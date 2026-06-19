@@ -5,7 +5,7 @@
 *Autor: Carlos Andrés Florez Villarraga*
 
 [![Licencia: CC BY-SA 4.0](https://img.shields.io/badge/Licencia-CC%20BY--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20766710.svg)](https://doi.org/10.5281/zenodo.20766710)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20754377.svg)](https://doi.org/10.5281/zenodo.20754377)
 
 Este repositorio está dedicado a recopilar y organizar los recursos relacionados con el curso de **Programación III**, con un enfoque específico en la programación funcional utilizando **Elixir**. Aquí encontrarás documentos, guías de apoyo, ejemplos de código y otros materiales que te ayudarán a comprender mejor los conceptos y técnicas asociados con este lenguaje de programación.
 
