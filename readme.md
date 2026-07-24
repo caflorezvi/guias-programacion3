@@ -24,7 +24,20 @@ Iniciando con una introducción a Elixir, exploraremos sus características prin
 | 07 | [Recursividad](docs/07.recursividad.md) | 15 | [Supervisores](docs/15.supervisores.md) |
 | 08 | [Structs](docs/08.structs.md) | 16 | [Mix](docs/16.mix.md) |
 
+Para poner en práctica todo lo aprendido, se propone el desarrollo de un proyecto final que integra los conceptos vistos a lo largo del curso:
+
 📄 [Proyecto final](docs/0.proyecto-final.md)
+
+## Talleres
+
+En la carpeta [`docs/talleres/`](docs/talleres/) encontrarás talleres prácticos para reforzar los conceptos vistos en el curso:
+
+| #  | Taller |
+|----|--------|
+| 01 | [Fundamentos funcionales](docs/talleres/taller1-fundamentos-funcionales.md) |
+| 02 | [Colecciones y recursividad](docs/talleres/taller2-colecciones-recursividad.md) |
+| 03 | [Archivos, streams y procesos](docs/talleres/taller3-archivos-streams-procesos.md) |
+| 04 | [OTP y aplicaciones distribuidas](docs/talleres/taller4-otp-distribuidas.md) |
 
 ## Ejemplos de código
 
