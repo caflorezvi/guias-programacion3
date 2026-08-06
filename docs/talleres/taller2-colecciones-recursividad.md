@@ -10,7 +10,7 @@ Docente: Carlos Andrés Florez V.
 | Campo | Información |
 |---|---|
 | **Núcleo temático** | 2. Manejo de datos y estructuras funcionales |
-| **Guías de referencia** | 6 a 8 (colecciones, recursividad, structs) |
+| **Guías de referencia** | 7 a 9 (colecciones, recursividad, structs) |
 | **Modalidad** | Parejas |
 | **Valor** | 5.0 |
 | **Entrega** | Archivos `.exs` por punto de código y un documento con las respuestas escritas |

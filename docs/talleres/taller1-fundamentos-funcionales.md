@@ -10,7 +10,7 @@ Docente: Carlos Andrés Florez V.
 | Campo | Información |
 |---|---|
 | **Núcleo temático** | 1. Fundamentos de la programación funcional |
-| **Guías de referencia** | 1 a 5 (paradigmas, introducción a Elixir, programación funcional, conceptos básicos, expresiones y estructuras de control) |
+| **Guías de referencia** | 1 a 6 (paradigmas, introducción a Elixir, programación funcional, conceptos básicos, expresiones y estructuras de control, guards y manejo de resultados) |
 | **Modalidad** | Parejas |
 | **Valor** | 5.0 |
 | **Entrega** | Un archivo `.exs` por cada punto de código y un documento con las respuestas escritas |

@@ -10,7 +10,7 @@ Docente: Carlos Andrés Florez V.
 | Campo | Información |
 |---|---|
 | **Núcleo temático** | 3. Abstracciones funcionales y manejo de efectos |
-| **Guías de referencia** | 9 a 11 (streams, manejo de archivos, procesos) |
+| **Guías de referencia** | 10 a 12 (streams, manejo de archivos, procesos) |
 | **Modalidad** | Grupos de tres |
 | **Valor** | 5.0 |
 | **Entrega** | Proyecto de código, archivos de datos generados y documento de análisis |

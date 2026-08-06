@@ -10,7 +10,7 @@ Docente: Carlos Andrés Florez V.
 | Campo | Información |
 |---|---|
 | **Núcleo temático** | 3 y 4. Abstracciones funcionales y aplicación práctica de la programación funcional |
-| **Guías de referencia** | 12 a 16 (aplicaciones distribuidas 1 y 2, OTP y GenServer, supervisores, Mix) |
+| **Guías de referencia** | 13 a 17 (aplicaciones distribuidas 1 y 2, OTP y GenServer, supervisores, Mix) |
 | **Modalidad** | Grupos de tres |
 | **Valor** | 5.0 |
 | **Entrega** | Proyecto Mix ejecutable en dos nodos, con pruebas, más el documento de análisis |
