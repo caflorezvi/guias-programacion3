@@ -15,14 +15,15 @@ Iniciando con una introducción a Elixir, exploraremos sus características prin
 
 | #  | Guía | #  | Guía |
 |----|------|----|------|
-| 01 | [Paradigmas de programación](docs/01.paradigmas-programacion.md) | 09 | [Streams](docs/09.streams.md) |
-| 02 | [Introducción a Elixir](docs/02.introduccion-elixir.md) | 10 | [Archivos](docs/10.archivos.md) |
-| 03 | [Programación funcional](docs/03.programacion-funcional.md) | 11 | [Procesos](docs/11.procesos.md) |
-| 04 | [Conceptos básicos de Elixir](docs/04.conceptos-basicos-elixir.md) | 12 | [Nodos distribuidos (1)](docs/12.nodos-dist-1.md) |
-| 05 | [Expresiones lógico-matemáticas](docs/05.expresiones-logico-matematicas.md) | 13 | [Nodos distribuidos (2)](docs/13.nodos-dist-2.md) |
-| 06 | [Colecciones](docs/06.colecciones.md) | 14 | [OTP](docs/14.otp.md) |
-| 07 | [Recursividad](docs/07.recursividad.md) | 15 | [Supervisores](docs/15.supervisores.md) |
-| 08 | [Structs](docs/08.structs.md) | 16 | [Mix](docs/16.mix.md) |
+| 01 | [Paradigmas de programación](docs/01.paradigmas-programacion.md) | 10 | [Streams](docs/10.streams.md) |
+| 02 | [Introducción a Elixir](docs/02.introduccion-elixir.md) | 11 | [Archivos](docs/11.archivos.md) |
+| 03 | [Programación funcional](docs/03.programacion-funcional.md) | 12 | [Procesos](docs/12.procesos.md) |
+| 04 | [Conceptos básicos de Elixir](docs/04.conceptos-basicos-elixir.md) | 13 | [Nodos distribuidos (1)](docs/13.nodos-dist-1.md) |
+| 05 | [Expresiones lógico-matemáticas](docs/05.expresiones-logico-matematicas.md) | 14 | [Nodos distribuidos (2)](docs/14.nodos-dist-2.md) |
+| 06 | [Guards y manejo de resultados](docs/06.guards-manejo-resultados.md) | 15 | [OTP](docs/15.otp.md) |
+| 07 | [Colecciones](docs/07.colecciones.md) | 16 | [Supervisores](docs/16.supervisores.md) |
+| 08 | [Recursividad](docs/08.recursividad.md) | 17 | [Mix](docs/17.mix.md) |
+| 09 | [Structs](docs/09.structs.md) | | |
 
 Para poner en práctica todo lo aprendido, se propone el desarrollo de un proyecto final que integra los conceptos vistos a lo largo del curso:
 
