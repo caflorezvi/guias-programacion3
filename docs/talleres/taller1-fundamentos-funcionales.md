@@ -335,5 +335,5 @@ Suba al aula virtual un archivo comprimido con:
 | Diagnóstico acertado de los errores, con distinción entre fallas de compilación y de ejecución | 18 % |
 | Argumentación técnica en la comparación de soluciones, más allá de la preferencia personal | 24 % |
 | Funcionamiento del código construido frente a los casos de prueba indicados | 20 % |
-| Nomenclatura, documentación y organización del código según las convenciones de la guía 4 | 10 % |
+| Nomenclatura, documentación y organización del código según las convenciones vistas en las guías | 10 % |
 | Uso documentado de IA: bitácora y reflexión honestas | 8 % |
