@@ -6,7 +6,7 @@ defmodule Loteria do
     "Ingrese un número entre #{@minimo} y #{@maximo}: "
     |> Util.leer(:integer)
     |> jugar()
-    |> Util.imprimir()
+    |> Util.imprimir_mensaje()
   end
 
   defp jugar(numero) when numero >= @minimo and numero <= @maximo do

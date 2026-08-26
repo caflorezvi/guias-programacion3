@@ -1,4 +1,4 @@
-defmodule Biblioteca do
+defmodule Cine do
   def main do
     leer_nombre()
     |> saludar()
@@ -6,7 +6,7 @@ defmodule Biblioteca do
   end
 
   defp saludar(nombre) do
-    "Hola #{nombre}, Bienvenido al sistema de la Biblioteca Central"
+    "Hola #{nombre}, Bienvenido al sistema de la Sala de Cine Central"
   end
 
   defp imprimir_mensaje(mensaje) do
@@ -19,4 +19,4 @@ defmodule Biblioteca do
   end
 end
 
-Biblioteca.main()
+Cine.main()

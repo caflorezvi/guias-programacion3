@@ -10,7 +10,7 @@ defmodule Palindroma do
     Util.leer("Ingrese una cadena: ", :string)
     |> es_palindroma_v2?()
     |> generar_mensaje()
-    |> Util.imprimir()
+    |> Util.imprimir_mensaje()
 
   end
 
