@@ -29,7 +29,7 @@ El proyecto debe incluir obligatoriamente:
 8. Ranking al final de cada partida y ranking histórico global filtrable por tema.
 9. Un servidor central y clientes que se ejecutan en consolas separadas y se comunican con él.
 10. Múltiples partidas concurrentes, una por cliente, cada una en su propio proceso.
-11. Recuperación de una partida que falla, sin afectar a las demás ni al servidor.
+11. Reinicio de una partida que falla, con aviso al creador y sin afectar a las demás ni al servidor.
 12. Persistencia de jugadores, banco de preguntas e historial de partidas.
 13. Manejo de errores propios para las situaciones inválidas del juego.
 
@@ -339,24 +339,22 @@ Resultado esperado:
 - Las notificaciones de una partida llegan solo a sus jugadores.
 - Una falla en una partida no debe tumbar el servidor ni afectar a las demás partidas activas.
 
-### 8.5 Recuperación de partidas
+### 8.5 Reinicio de partidas
 
-Una partida en curso que falla no puede llevarse consigo el progreso de sus jugadores. El sistema debe reponerla y continuar el juego desde la última ronda cerrada.
+Una partida que falla no puede tumbar el servidor ni dejar a su jugador esperando una pregunta que no va a llegar. El sistema no guarda el progreso de las partidas, así que la partida que falla se reinicia desde cero y le avisa al creador.
 
-- Las partidas se registran en el `DynamicSupervisor` con `restart: :transient`, de modo que se reponen cuando terminan de forma anormal y no cuando terminan bien.
-- Al cerrar cada ronda, la partida le entrega al gestor de partidas su estado completo, que el gestor guarda asociado al `id` de la partida. Cuando la partida termina bien, el gestor borra esa copia.
-- Cuando el supervisor repone la partida, el proceso nuevo le pide al gestor la copia y arranca la ronda siguiente a la última cerrada, con la misma función que inicia cualquier ronda. La ronda que estaba en curso cuando ocurrió la falla se vuelve a jugar desde cero.
-- Los bots se lanzan enlazados a la partida, así que mueren con ella. La partida repuesta los vuelve a lanzar con la misma función que usa `start_game`.
-- El PID del cliente humano sigue siendo válido, porque vive en otro nodo y no se ve afectado por la falla.
+- Las partidas se registran en el `DynamicSupervisor` con `restart: :transient`, de modo que se reinician cuando terminan de forma anormal y no cuando terminan bien.
+- El supervisor reinicia la partida con los mismos argumentos con los que se creó, que son el `id`, el creador, el tema, el número de preguntas, el tiempo por pregunta y el PID del cliente. La partida vuelve al estado `esperando`, solo con el creador, sin bots y sin puntajes.
+- Las rondas jugadas antes de la falla se pierden y no se registra nada en el historial.
+- Los bots se lanzan enlazados a la partida, así que mueren con ella. Para volver a jugar, el creador agrega de nuevo los bots y ejecuta `start_game`.
+- El PID de la partida cambia al reiniciarse, así que el servidor no puede seguir usando el que obtuvo al crearla. El PID del cliente sí sigue siendo válido, porque vive en otro nodo.
 
-Solo se exige recuperar partidas en curso. Si falla una partida que todavía está en `esperando`, basta con cancelarla y avisarle al creador.
+`init` recibe los mismos argumentos al crearse que al reiniciarse, de modo que la partida no sabe por sí sola si viene de una falla. Una forma de resolverlo es que, al arrancar, la partida le reporte al gestor de partidas su `id` y su PID. Si el gestor ya tenía ese `id` con otro PID, se trata de un reinicio, así que guarda el PID nuevo y le envía el aviso al creador. El reporte debe hacerse con `cast`, porque mientras crea la partida el gestor está esperando a que el supervisor termine de arrancarla, y un `call` desde `init` lo dejaría bloqueado.
 
-Para demostrarlo, desde la consola del servidor se obtiene el PID de una partida en curso y se ejecuta `Process.exit(pid, :kill)`. El gestor de partidas debe ofrecer una función para obtener ese PID a partir del `id` de la partida.
-
-Formato sugerido para el aviso que la partida repuesta envía antes de la pregunta:
+Formato sugerido para el aviso:
 
 ```
-La partida P-1001 se recuperó de una falla. Se repite la pregunta 4.
+La partida P-1001 falló y se reinició sin su progreso. Agrega los bots y ejecuta start_game para jugar de nuevo.
 ```
 
 ---
@@ -405,7 +403,7 @@ proyecto_trivia/
 |   |-- trivia/
 |   |   |-- servidor.ex             # SERVIDOR: recibe las peticiones y las enruta
 |   |   |-- gestor_jugadores.ex     # SERVIDOR: registro, sesiones, puntajes y ranking
-|   |   |-- gestor_partidas.ex      # SERVIDOR: creación, ubicación y copia del estado
+|   |   |-- gestor_partidas.ex      # SERVIDOR: creación, ubicación y aviso de reinicio
 |   |   |-- partida.ex              # SERVIDOR: GenServer de partida
 |   |   |-- supervisor_partidas.ex  # SERVIDOR: DynamicSupervisor de partidas
 |   |   |-- bot.ex                  # SERVIDOR: jugador automático
@@ -428,18 +426,17 @@ Aunque todo el código se entregue en un mismo proyecto Mix, los módulos marcad
 
 ## 12. Pruebas Mínimas Requeridas
 
-Programar al menos 5 pruebas con ExUnit, elegidas de esta lista de 8:
+Programar al menos 5 pruebas con ExUnit, elegidas de esta lista de 7:
 
 1. Cálculo del puntaje de una ronda con respuesta correcta, incorrecta y sin responder en los tres niveles, incluyendo la bonificación por rapidez en distintos momentos y con dos valores de `tiempo_pregunta`.
 2. Sorteo de preguntas: la cantidad solicitada, todas del tema pedido, sin repetir, con la cantidad de cada nivel que indica el reparto y ordenadas de menor a mayor nivel.
 3. Validación de respuestas: se acepta solo la primera de cada jugador y se rechazan la letra inválida y la respuesta que llega sin ronda abierta.
 4. Reglas de armado de una partida: rechazar `add_bot` con la partida llena o ya iniciada, y `start_game` con menos de dos bots.
 5. Estadísticas desde el historial: a partir de líneas de historial se calculan el puntaje acumulado y las partidas jugadas de un jugador, y las entradas de bots se ignoran.
-6. Recuperación de una partida: a partir de la copia guardada al cerrar una ronda, se arranca la ronda siguiente con los mismos jugadores y los mismos puntajes.
-7. Decisión de un bot: devuelve una de las cuatro letras y un retardo dentro del rango de su dificultad.
-8. Nivel del jugador: a partir de líneas de historial se calcula el puntaje por tema y el nivel, incluyendo los valores justo en los umbrales (59, 60, 179 y 180), un puntaje negativo y un tema nunca jugado.
+6. Decisión de un bot: devuelve una de las cuatro letras y un retardo dentro del rango de su dificultad.
+7. Nivel del jugador: a partir de líneas de historial se calcula el puntaje por tema y el nivel, incluyendo los valores justo en los umbrales (59, 60, 179 y 180), un puntaje negativo y un tema nunca jugado.
 
-La prueba 7 solo es posible si la decisión del bot está separada del proceso que la ejecuta, y la 8 si el cálculo del nivel recibe las líneas del historial en lugar de abrir el archivo por su cuenta.
+La prueba 6 solo es posible si la decisión del bot está separada del proceso que la ejecuta, y la 7 si el cálculo del nivel recibe las líneas del historial en lugar de abrir el archivo por su cuenta.
 
 ---
 
@@ -456,11 +453,10 @@ Se considera cumplido si:
 7. Los bots responden dentro del tiempo, aciertan según su dificultad y el nivel de la pregunta, puntúan y aparecen en el ranking final, sin llegar a `users.json` ni al ranking histórico.
 8. Los clientes funcionan sin acceso a los archivos de datos, obteniendo del servidor todo lo que muestran.
 9. Al cerrar un cliente con su partida en curso, la partida termina según la sección 6.5 y el servidor sigue atendiendo a los demás clientes.
-10. Al matar el proceso de una partida en curso, esta se repone y repite la ronda con los puntajes previos intactos, la otra partida sigue jugándose y el servidor no cae.
-11. Los usuarios y el historial persisten al reiniciar el servidor, y con ellos el puntaje acumulado, las partidas jugadas y el nivel de cada jugador en cada tema.
-12. El ranking histórico global y el filtrado por tema muestran resultados coherentes con el historial.
-13. Las situaciones de error de la sección 10 se manejan sin tumbar el servidor.
-14. Las pruebas unitarias pasan.
+10. Los usuarios y el historial persisten al reiniciar el servidor, y con ellos el puntaje acumulado, las partidas jugadas y el nivel de cada jugador en cada tema.
+11. El ranking histórico global y el filtrado por tema muestran resultados coherentes con el historial.
+12. Las situaciones de error de la sección 10 se manejan sin tumbar el servidor.
+13. Las pruebas unitarias pasan.
 
 ---
 
@@ -499,15 +495,7 @@ Se considera cumplido si:
 
 Mientras tanto, Carlos recibe en su consola solo las preguntas de historia de `P-1002`, cada una con sus 20 segundos.
 
-### 14.3 Caída y recuperación
-
-- Con la ronda 4 de `P-1001` en curso, desde la consola del servidor se obtiene el PID de la partida y se ejecuta `Process.exit(pid_partida, :kill)`.
-- Los dos bots, que estaban enlazados a la partida, mueren con ella.
-- El `DynamicSupervisor` repone la partida, que le pide al gestor la copia guardada al cerrar la ronda 3 y arranca la ronda 4 con los puntajes de las tres rondas anteriores.
-- La partida vuelve a lanzar los dos bots, y los tres jugadores reciben el aviso de recuperación y la pregunta 4 otra vez, con el temporizador desde cero.
-- La partida `P-1002` de Carlos sigue su curso sin enterarse de nada.
-
-### 14.4 Cierre de la partida
+### 14.3 Cierre de la partida
 
 1. La ronda 5 es la pregunta intermedia. Pedro la responde bien a los 5 segundos → 15 + 3 de bonificación = +18.
 2. El sistema muestra en la consola de Pedro el ranking con el puntaje de cada jugador y el ganador.
@@ -565,5 +553,5 @@ Si el grupo implementa la extensión, la muestra en la sustentación con dos cli
 1. **Repositorio Git** con el proyecto Mix completo, siguiendo la arquitectura recomendada e incluyendo el archivo semilla `data/questions.json`.
 2. **Archivo `README.md`** con: integrantes, instrucciones de compilación, cómo levantar el nodo del servidor y los nodos de los clientes, cómo conectarlos y la lista de comandos disponibles.
 3. **Documentación del uso de inteligencia artificial** indicando herramientas y propósito.
-4. **Pruebas ExUnit** (mínimo 5 de las 8 de la sección 12) que pasen con `mix test`.
-5. **Sustentación** en vivo demostrando los criterios de aceptación, con el servidor y al menos dos clientes en consolas separadas, cada uno con su propia partida y sus bots jugando al mismo tiempo, y la caída y recuperación de una partida en curso. La extensión opcional se demuestra solo si se implementó.
+4. **Pruebas ExUnit** (mínimo 5 de las 7 de la sección 12) que pasen con `mix test`.
+5. **Sustentación** en vivo demostrando los criterios de aceptación, con el servidor y al menos dos clientes en consolas separadas, cada uno con su propia partida y sus bots jugando al mismo tiempo. La extensión opcional se demuestra solo si se implementó.
