@@ -5,13 +5,15 @@ Programación III - Proyecto Final
 Docente: Carlos Andrés Florez V.
 ```
 
-# Proyecto Final - Trivia Multijugador Distribuida
+# Proyecto Final - Trivia Concurrente
 
 ## 1. Objetivo del Proyecto
 
-Implementar un juego multijugador de preguntas y respuestas con interfaz por consola, en el que varios jugadores se conectan al mismo tiempo y compiten en partidas independientes, ejecutándose de forma concurrente y distribuida en al menos 2 nodos Elixir.
+Implementar un juego de preguntas y respuestas con interfaz por consola, en el que cada jugador humano compite contra al menos dos jugadores automáticos (bots). Las preguntas tienen nivel de dificultad y se ajustan a lo que el jugador ha demostrado en cada tema, así que quien acumula puntos en un tema empieza a recibir preguntas más difíciles de ese tema. Las partidas son independientes entre sí y se ejecutan de forma concurrente.
 
-El sistema no es un programa que cada jugador ejecuta por su cuenta. Hay un **servidor central** que se levanta una sola vez y concentra el estado del juego y los datos persistidos. Los **clientes** son programas de consola separados, sin estado de juego, que envían al servidor las peticiones que escribe el jugador y muestran lo que reciben de vuelta. La sección 8 detalla el reparto de responsabilidades y la comunicación entre ambos.
+El sistema no es un programa que cada jugador ejecuta por su cuenta. Hay un **servidor central** que se levanta una sola vez, queda corriendo y concentra el estado del juego y los datos persistidos. Los **clientes** son programas de consola separados, sin estado de juego, que se abren después, se comunican con el servidor, le envían las peticiones que escribe el jugador y muestran lo que reciben de vuelta. Cada cliente juega su propia partida con sus propios bots, y varias partidas corren al mismo tiempo en el servidor. La sección 8 detalla el reparto de responsabilidades y la comunicación entre ambos.
+
+Que varios jugadores humanos compartan una misma partida **no es un requisito del proyecto**. Queda descrito como extensión opcional en la sección 15.
 
 ## 2. Alcance Obligatorio
 
@@ -19,15 +21,19 @@ El proyecto debe incluir obligatoriamente:
 
 1. Registro e inicio de sesión de jugadores.
 2. Creación de partidas con tema, número de preguntas y tiempo por pregunta configurables.
-3. Ingreso de jugadores a partidas existentes, con cupo máximo.
-4. Envío simultáneo de cada pregunta a todos los jugadores de la partida.
-5. Temporizador por pregunta y cierre automático de la ronda al vencer el tiempo.
-6. Cálculo de puntaje por respuesta correcta, incorrecta y sin responder, con bonificación por rapidez.
-7. Ranking al final de cada partida y ranking histórico global filtrable por tema.
-8. Múltiples partidas concurrentes, cada una en su propio proceso.
-9. Ejecución distribuida: servidor y clientes en nodos Elixir distintos, con partidas alojadas en al menos 2 nodos.
-10. Persistencia de jugadores, banco de preguntas e historial de partidas.
-11. Manejo de errores propios para las situaciones inválidas del juego.
+3. Preguntas con nivel de dificultad, sorteadas según el nivel del jugador en el tema de la partida.
+4. Jugadores automáticos que completan la partida y juegan como uno más.
+5. Envío simultáneo de cada pregunta a todos los jugadores de la partida.
+6. Temporizador por pregunta y cierre automático de la ronda al vencer el tiempo.
+7. Cálculo de puntaje por respuesta correcta, incorrecta y sin responder, según el nivel de la pregunta y con bonificación por rapidez.
+8. Ranking al final de cada partida y ranking histórico global filtrable por tema.
+9. Un servidor central y clientes que se ejecutan en consolas separadas y se comunican con él.
+10. Múltiples partidas concurrentes, una por cliente, cada una en su propio proceso.
+11. Recuperación de una partida que falla, sin afectar a las demás ni al servidor.
+12. Persistencia de jugadores, banco de preguntas e historial de partidas.
+13. Manejo de errores propios para las situaciones inválidas del juego.
+
+Cada partida la juega un humano, que es quien la crea, contra dos o tres bots. La concurrencia no depende de que varios humanos compartan partida, porque cada partida atiende al mismo tiempo el temporizador de la ronda, la respuesta del jugador y las de sus bots, y las partidas de los distintos clientes corren a la vez dentro del servidor.
 
 ---
 
@@ -37,14 +43,13 @@ El proyecto debe incluir obligatoriamente:
 
 - `usuario` (identificador único, sin espacios)
 - `clave` (se almacena en texto plano; el alcance del proyecto no incluye cifrado)
-- `puntaje_acumulado` (suma de los puntajes obtenidos en todas sus partidas; puede ser negativo)
-- `partidas_jugadas`
 
-El puntaje por tema no se almacena en el jugador. El ranking filtrado por tema se calcula recorriendo el historial de partidas, lo que evita duplicar información y da un uso natural a los streams sobre archivos.
+El jugador no guarda estadísticas. Su puntaje acumulado, sus partidas jugadas, su puntaje por tema y su nivel en cada tema se calculan recorriendo el historial de partidas, lo que evita duplicar información y da un uso natural a los streams sobre archivos.
 
 ### 3.2 Pregunta
 
 - `tema` (identificador en minúscula y sin espacios, por ejemplo `ciencia`)
+- `nivel` (`basico`, `intermedio` o `avanzado`)
 - `enunciado`
 - `opciones` (exactamente 4, identificadas como A, B, C y D)
 - `respuesta` (una de las cuatro letras)
@@ -56,13 +61,13 @@ Se pueden agregar temas y preguntas editando `data/questions.json`, sin cambiar 
 - `id` (identificador único asignado al crearse, por ejemplo `P-1001`)
 - `creador` (usuario que la creó)
 - `tema`
+- `nivel` (nivel del creador en el tema al momento de crear la partida)
 - `total_preguntas`
 - `tiempo_pregunta` (segundos)
-- `jugadores` (entre 2 y 4)
+- `jugadores` (entre 3 y 4, el creador y sus bots)
 - `estado` (`esperando`, `en_curso`, `finalizada`)
 - `pregunta_actual` (número de la ronda en curso)
 - `puntajes` (puntaje de cada jugador dentro de la partida)
-- `nodo` (nodo donde se está ejecutando)
 
 ---
 
@@ -70,16 +75,19 @@ Se pueden agregar temas y preguntas editando `data/questions.json`, sin cambiar 
 
 ### 4.1 Conexión y sesión
 
-- `connect <usuario> <clave>`: inicia sesión; si el usuario no existe, lo registra automáticamente con puntaje acumulado en 0.
+- `connect <usuario> <clave>`: inicia sesión; si el usuario no existe, lo registra automáticamente.
 - `disconnect`: cierra la sesión. Si el jugador está en una partida en curso, se aplica lo definido en la sección 6.5.
 
 Si el usuario existe pero la clave no coincide, el sistema rechaza la conexión.
 
+Un mismo usuario no puede tener dos sesiones abiertas al mismo tiempo desde clientes distintos.
+
+El prefijo `bot_` está reservado para los jugadores automáticos de la sección 6.6, así que un usuario que empiece por `bot_` se rechaza al conectarse.
+
 ### 4.2 Consultas
 
-- `score`: muestra el puntaje acumulado del jugador y su número de partidas jugadas.
+- `score`: muestra el puntaje acumulado del jugador, su número de partidas jugadas y, por cada tema que ha jugado, su puntaje y su nivel.
 - `ranking [tema]`: muestra el ranking histórico global. Con un tema como argumento, muestra el ranking calculado solo con las partidas de ese tema.
-- `list_games`: lista las partidas que aún admiten jugadores.
 
 Formato sugerido para `score`:
 
@@ -87,6 +95,10 @@ Formato sugerido para `score`:
 === Pedro ===
 Puntaje acumulado: 85
 Partidas jugadas: 6
+
+Tema        Puntaje   Nivel
+ciencia          72   intermedio
+historia         13   basico
 ```
 
 Formato sugerido para `ranking`:
@@ -99,55 +111,65 @@ Formato sugerido para `ranking`:
 3    Carlos          -10          3
 ```
 
-Formato sugerido para `list_games`:
-
-```
-=== Partidas disponibles ===
-ID       Tema       Preguntas   Tiempo   Jugadores   Estado
-P-1001   ciencia        5         15s       2/4       esperando
-P-1002   historia      10         20s       3/4       esperando
-```
-
 ---
 
 ## 5. Gestión de Partidas
 
-- `create_game tema=<tema> preguntas=<n> tiempo=<segundos>`: crea una partida y deja al creador dentro de ella. El sistema responde con el `id` asignado y el nodo donde quedó alojada.
-- `join_game <id_partida>`: ingresa a una partida en estado `esperando`.
-- `start_game`: el creador inicia la partida.
+- `create_game tema=<tema> preguntas=<n> tiempo=<segundos>`: crea una partida y deja al creador dentro de ella. El sistema responde con el `id` asignado y el nivel del creador en ese tema.
+- `add_bot <facil|dificil>`: agrega un jugador automático a la partida.
+- `start_game`: inicia la partida.
 - `leave_game`: abandona la partida.
 
 Reglas:
 
-- Una partida admite entre 2 y 4 jugadores. Con un solo jugador no puede iniciarse.
-- Cuando la partida alcanza 4 jugadores o pasa a estado `en_curso`, deja de admitir ingresos.
-- Solo el creador puede ejecutar `start_game`.
+- Una partida tiene entre 3 y 4 jugadores. Uno es el creador y los demás son bots, así que antes de `start_game` deben haberse agregado al menos dos.
+- Cuando la partida alcanza 4 jugadores, `add_bot` se rechaza. Tampoco se pueden agregar bots a una partida en curso.
 - Un jugador puede estar en una sola partida a la vez.
-- El tema solicitado debe existir en el banco y tener al menos tantas preguntas como pida `preguntas=<n>`.
-- Si el creador abandona antes de iniciar, la partida se cancela y los demás jugadores quedan libres.
+- El tema solicitado debe existir en el banco y tener suficientes preguntas de cada nivel para el reparto de la sección 6.1.
+- Si el creador abandona antes de iniciar, la partida se cancela.
 
 ---
 
 ## 6. Dinámica del Juego
 
-### 6.1 Selección de preguntas
+### 6.1 Nivel del jugador y selección de preguntas
 
-Al iniciar la partida, el sistema sortea del banco tantas preguntas como se hayan configurado, filtradas por el tema de la partida y sin repetir ninguna dentro de la misma partida. Todos los jugadores reciben las mismas preguntas en el mismo orden.
+**Nivel del jugador.** Al crear una partida, el servidor recorre el historial y suma los puntajes que el creador ha obtenido en las partidas de ese tema. Con esa suma decide su nivel:
+
+| Puntaje acumulado en el tema | Nivel        |
+|------------------------------|--------------|
+| menos de 60                  | `basico`     |
+| de 60 a 179                  | `intermedio` |
+| 180 o más                    | `avanzado`   |
+
+Un jugador que nunca ha jugado un tema empieza en `basico`. El nivel también puede bajar, porque los puntajes negativos restan del acumulado del tema. El nivel queda fijo en la partida desde que se crea, aunque el resultado de esa misma partida lo cambie para la siguiente.
+
+**Reparto por nivel.** Una partida no trae solo preguntas del nivel del jugador. Mezcla niveles según esta tabla:
+
+| Nivel del jugador | Básico | Intermedio | Avanzado |
+|-------------------|--------|------------|----------|
+| `basico`          | 70 %   | 30 %       | 0 %      |
+| `intermedio`      | 20 %   | 60 %       | 20 %     |
+| `avanzado`        | 0 %    | 30 %       | 70 %     |
+
+Para los dos niveles distintos al del jugador, la cantidad de preguntas es `trunc(total_preguntas * porcentaje / 100)`. Las que sobran son del nivel del jugador. Por ejemplo, con 5 preguntas un jugador `basico` recibe 1 intermedia (`trunc(1.5)`) y 4 básicas, y con 10 preguntas un jugador `avanzado` recibe 3 intermedias y 7 avanzadas.
+
+**Sorteo.** Al iniciar la partida, el sistema sortea del banco las preguntas de cada nivel, filtradas por el tema de la partida y sin repetir ninguna dentro de la misma partida. Las ordena de menor a mayor nivel, y dentro de un mismo nivel quedan en el orden del sorteo, así que la partida se pone más difícil a medida que avanza. Todos los jugadores de la partida reciben las mismas preguntas en el mismo orden. Cada partida hace su propio sorteo, así que dos partidas del mismo tema pueden tener preguntas distintas.
 
 ### 6.2 Ronda
 
 Cada ronda sigue esta secuencia:
 
 1. La partida envía el enunciado y las cuatro opciones a todos sus jugadores al mismo tiempo, junto con el tiempo disponible.
-2. Cada jugador responde de forma independiente con `answer <numero_pregunta> <letra>`.
+2. Cada jugador responde de forma independiente. El humano lo hace con `answer <letra>`.
 3. La ronda termina cuando todos los jugadores han respondido o cuando vence el temporizador, lo que ocurra primero.
 4. El sistema anuncia la respuesta correcta, el puntaje obtenido por cada jugador en la ronda y el acumulado dentro de la partida.
-5. Comienza la siguiente ronda.
+5. Después de una pausa de 3 segundos comienza la siguiente ronda. Durante la pausa no hay ronda abierta, así que una respuesta que llegue tarde se rechaza en lugar de contar para la pregunta siguiente.
 
 Formato sugerido para el envío de una pregunta:
 
 ```
-═══ Pregunta 1 de 5 - Ciencia ═══
+═══ Pregunta 1 de 5 - Ciencia - Nivel básico ═══
 ¿Cuál es el planeta más grande del sistema solar?
   A) Marte      B) Júpiter      C) Saturno      D) Neptuno
 Tiempo: 15 segundos
@@ -160,51 +182,73 @@ Formato sugerido para el cierre de la ronda:
 ```
 Respuesta correcta: B) Júpiter
 
-  Pedro    B  correcto (4s)    +13   = 10 + 3 por rapidez   (total 13)
-  Carlos   C  incorrecto (7s)   -5                          (total -5)
-  Ana      -  sin responder      0                          (total 0)
+  bot_1    +14   (total 14)
+  bot_2     -5   (total -5)
+  Pedro      0   (total 0)
 ```
 
 ### 6.3 Reglas de respuesta
 
 - Solo se valida la primera respuesta de cada jugador en cada ronda. Las siguientes se ignoran sin penalización y el sistema lo informa.
-- El número de pregunta debe corresponder a la ronda en curso. Una respuesta con otro número se rechaza.
+- Una respuesta que llega cuando no hay ronda abierta, sea en la pausa entre rondas o con la partida sin iniciar o ya terminada, se rechaza.
 - La letra debe ser A, B, C o D. Cualquier otro valor se rechaza y no consume la respuesta del jugador.
 
 ### 6.4 Puntaje
 
-| Situación | Puntos |
-|-----------|--------|
-| Respuesta correcta   | +10, más la bonificación por rapidez |
-| Respuesta incorrecta | -5  |
-| Sin responder        | 0   |
+Los puntos dependen del nivel de la pregunta:
+
+| Situación            | Básico | Intermedio | Avanzado |
+|----------------------|--------|------------|----------|
+| Respuesta correcta   | +10    | +15        | +20      |
+| Respuesta incorrecta | -5     | -8         | -10      |
+| Sin responder        | 0      | 0          | 0        |
+
+A una respuesta correcta se le suma además la bonificación por rapidez.
 
 **Bonificación por rapidez.** Una respuesta correcta suma puntos adicionales según el tiempo que sobraba cuando llegó:
 
 ```text
 bonificacion = trunc(5 * segundos_restantes / tiempo_pregunta)
-puntos_ronda = 10 + bonificacion
+puntos_ronda = puntos_nivel + bonificacion
 ```
 
-`segundos_restantes` es el tiempo que faltaba para que venciera el temporizador en el momento en que la partida recibió la respuesta. La bonificación va de 0 a 5 puntos, así que una respuesta correcta vale entre 10 y 15. Al dividir sobre `tiempo_pregunta`, una partida de 30 segundos reparte la bonificación con el mismo criterio que una de 15.
+`segundos_restantes` es el tiempo que faltaba para que venciera el temporizador en el momento en que la partida recibió la respuesta. La bonificación va de 0 a 5 puntos sin importar el nivel, así que una respuesta correcta básica vale entre 10 y 15, una intermedia entre 15 y 20 y una avanzada entre 20 y 25. Al dividir sobre `tiempo_pregunta`, una partida de 30 segundos reparte la bonificación con el mismo criterio que una de 15.
 
 Ejemplos con `tiempo_pregunta = 15`:
 
-| Momento de la respuesta | Segundos restantes | Bonificación | Puntos si es correcta |
-|-------------------------|--------------------|--------------|-----------------------|
-| 1 s                     | 14                 | 4            | 14                    |
-| 4 s                     | 11                 | 3            | 13                    |
-| 9 s                     | 6                  | 2            | 12                    |
-| 14 s                    | 1                  | 0            | 10                    |
+| Momento de la respuesta | Segundos restantes | Bonificación | Correcta básica | Correcta avanzada |
+|-------------------------|--------------------|--------------|-----------------|-------------------|
+| 1 s                     | 14                 | 4            | 14              | 24                |
+| 4 s                     | 11                 | 3            | 13              | 23                |
+| 9 s                     | 6                  | 2            | 12              | 22                |
+| 14 s                    | 1                  | 0            | 10              | 20                |
 
 Para calcular la bonificación, la partida debe registrar el instante en que empieza la ronda y el instante en que llega la respuesta de cada jugador.
 
-Los puntajes negativos son válidos y se conservan tanto en el resultado de la partida como en el puntaje acumulado del jugador. Callar cuando no se sabe la respuesta es distinto de arriesgarse.
+Los puntajes negativos son válidos y se conservan tanto en el resultado de la partida como en el puntaje acumulado del jugador. Callar cuando no se sabe la respuesta es distinto de arriesgarse. La penalización crece con el nivel para que responder al azar siga sin convenir. Quien adivina entre cuatro opciones acierta una de cada cuatro veces, y sin contar la bonificación pierde en promedio más de lo que gana en los tres niveles.
 
-### 6.5 Desconexión durante la partida
+### 6.5 Abandono durante la partida
 
-- Si un jugador se desconecta o abandona con la partida en curso, sus rondas restantes se cuentan como sin responder y conserva el puntaje obtenido hasta ese momento.
-- Si queda un solo jugador activo, la partida termina de inmediato y se registra como finalizada con ese jugador como ganador.
+Si el jugador humano ejecuta `leave_game` o `disconnect` con la partida en curso, o si su cliente se cierra, la partida termina de inmediato. Las rondas que faltaban no se juegan y el resultado se registra con los puntajes obtenidos hasta ese momento, como indica la sección 7. Así, abandonar una partida que va mal no borra el resultado.
+
+### 6.6 Jugadores automáticos
+
+Un bot es un jugador que responde solo. Se agrega con `add_bot`, ocupa un cupo de la partida y recibe un nombre único dentro de ella (`bot_1`, `bot_2`, ...).
+
+Los bots viven en el servidor, no en el cliente. Cada bot vive en su **propio proceso**, registra su PID en la partida igual que el cliente del jugador humano y recibe las mismas notificaciones. Cuando le llega una pregunta, decide qué contestar y programa su respuesta para más adelante con `Process.send_after`, de modo que la partida la recibe como cualquier otra. Si un bot necesita un camino especial dentro de la partida para poder jugar, el diseño está mal.
+
+La dificultad define qué tan bien y qué tan rápido responde:
+
+| Dificultad | Acierta en básica | Acierta en intermedia | Acierta en avanzada | Momento de la respuesta            |
+|------------|-------------------|-----------------------|---------------------|------------------------------------|
+| `facil`    | 40 %              | 30 %                  | 20 %                | entre el 40 % y el 90 % del tiempo |
+| `dificil`  | 80 %              | 70 %                  | 60 %                | entre el 10 % y el 40 % del tiempo |
+
+Con `tiempo_pregunta = 15`, un bot fácil responde entre los segundos 6 y 13.5, y uno difícil entre los segundos 1.5 y 6. Cuando el bot falla, escoge al azar una de las tres opciones incorrectas. Para decidir, el bot solo necesita el nivel de la pregunta y la respuesta correcta, que recibe de la partida porque vive en el servidor. Esos datos nunca se envían a los clientes.
+
+Los bots puntúan con las mismas reglas de la sección 6.4 y aparecen en el ranking final de la partida, pero no se registran en `data/users.json` ni se cuentan en el ranking histórico. Al calcular el ranking, el puntaje y el nivel de un jugador, las entradas del historial que corresponden a bots se ignoran.
+
+Un bot no se desconecta ni abandona la partida.
 
 ---
 
@@ -213,89 +257,123 @@ Los puntajes negativos son válidos y se conservan tanto en el resultado de la p
 Al terminar la última ronda, la partida muestra su ranking y persiste el resultado:
 
 ```
-═══ Fin de la partida P-1001 (ciencia) ═══
-Nodo: arena@host2 | Preguntas: 5 | Duración: 1m 24s
-
-#    Jugador   Correctas   Incorrectas   Sin responder   Bonificación   Puntaje
-1    Pedro         4            1              0              8             43
-2    Ana           3            1              1              6             31
-3    Carlos        1            4              0              2             -8
+═══ Fin de la partida P-1001 (ciencia, nivel básico) ═══
+#    Jugador   Puntaje
+1    Pedro         48
+2    bot_1         22
+3    bot_2        -11
 
 Ganador: Pedro
 ```
 
 Después del anuncio:
 
-1. Se agrega una línea al historial en `data/results.log`.
-2. Se suma el puntaje de la partida al puntaje acumulado de cada jugador y se incrementa su contador de partidas jugadas en `data/users.json`.
-3. Los jugadores quedan libres para crear o unirse a otra partida.
+1. Se agrega una línea al historial en `data/results.log`. Con esa línea quedan actualizados el puntaje acumulado, las partidas jugadas y el nivel del jugador, porque todos se calculan desde el historial.
+2. El jugador queda libre para crear otra partida.
 
-En caso de empate en el puntaje más alto, la partida se registra con ganador compartido.
+En caso de empate en el puntaje más alto, la partida se registra con ganador compartido. Si el ganador es un bot, el historial lo registra como tal.
+
+Como varias partidas pueden terminar al mismo tiempo y varios jugadores pueden registrarse a la vez, las escrituras sobre `users.json` y `results.log` deben pasar por un único proceso del servidor, para que una escritura no se mezcle con otra.
 
 ---
 
-## 8. Arquitectura Cliente-Servidor, Concurrencia y Distribución
+## 8. Arquitectura Cliente-Servidor y Concurrencia
 
 ### 8.1 Servidor central
 
-El servidor es el único punto donde vive el estado del juego. Se levanta una vez, antes de que se conecte cualquier jugador, y se encarga de:
+El servidor es el único punto donde vive el estado del juego. Se levanta una vez en su propia consola, antes de que se conecte cualquier jugador, queda corriendo y se encarga de:
 
 - Cargar el banco de preguntas desde `data/questions.json` al arrancar y mantenerlo en memoria.
 - Leer y escribir `data/users.json` y `data/results.log`. Es el único componente que toca el sistema de archivos.
-- Crear, listar y supervisar las partidas activas, y saber en qué nodo quedó alojada cada una.
+- Llevar las sesiones de los jugadores conectados.
+- Crear y supervisar las partidas activas y sus bots.
 - Resolver cada ronda, calcular los puntajes y decidir el resultado de la partida.
 
 Como consecuencia, el cliente nunca ve las respuestas correctas ni el archivo de preguntas. Si el banco viviera en el cliente, cualquier jugador podría abrirlo y hacer trampa.
 
 ### 8.2 Clientes
 
-Cada jugador ejecuta su propio cliente en una consola aparte, en su propio nodo. El cliente no tiene lógica de juego: lee lo que el jugador escribe, lo traduce en una petición al servidor, y muestra por pantalla lo que llega de vuelta.
+Cada jugador abre su propio cliente en una consola aparte. Como cada consola ejecuta su propia máquina virtual de Erlang, cada cliente es un nodo Elixir distinto del servidor, y para comunicarse los dos nodos deben estar conectados.
 
-El intercambio tiene dos direcciones:
+Ejemplo de arranque en tres consolas:
 
-- **Peticiones.** Las origina el jugador y esperan respuesta, como `connect`, `list_games`, `create_game`, `join_game`, `start_game`, `answer`, `score` y `ranking`. El cliente envía la petición y espera a que el servidor conteste con el resultado o con un error de los definidos en la sección 10.
-- **Notificaciones.** Las origina el servidor y llegan sin que nadie las pida, como el enunciado de una pregunta, el cierre de una ronda o el ranking final. El cliente no sabe cuándo van a llegar y debe estar listo para recibirlas en cualquier momento.
+```bash
+# Consola 1: servidor
+iex --sname servidor -S mix
 
-Para conectarse, el cliente enlaza su nodo con el nodo del servidor y ubica el proceso del servidor por su nombre registrado en el clúster, sin necesidad de conocer su PID.
+# Consola 2: cliente de Pedro
+iex --sname pedro -S mix
 
-Un cliente que se cae o se desconecta no puede dejar colgada una partida. El servidor monitorea los procesos de los jugadores conectados y, cuando uno desaparece, aplica las reglas de la sección 6.5.
+# Consola 3: cliente de Carlos
+iex --sname carlos -S mix
+```
 
-### 8.3 Partidas concurrentes y distribución
+El proyecto debe definir cómo arranca cada nodo en su papel. El nodo de un cliente no puede levantar su propio servidor, porque entonces tendría su propia copia del juego en lugar de usar la central.
 
-- Cada partida debe vivir en un proceso `GenServer` independiente, gestionado por un `DynamicSupervisor`.
-- El sistema debe ejecutarse en al menos 2 nodos conectados, y las partidas deben distribuirse entre ellos. El servidor lleva el directorio de qué partida vive en qué nodo y enruta hacia allá las peticiones de los jugadores.
-- Un jugador conectado desde cualquier nodo debe poder jugar en una partida alojada en otro. El jugador no elige el nodo ni necesita saber cuál le tocó.
+El cliente no tiene lógica de juego. Lee lo que el jugador escribe, lo traduce en una petición al servidor y muestra por pantalla lo que llega de vuelta. Para conectarse, enlaza su nodo con el del servidor y ubica el proceso del servidor por su nombre, sin necesidad de conocer su PID.
 
-Resultado esperado:
+Un cliente que se cae o se cierra no puede dejar colgada una partida. El servidor monitorea los procesos de los clientes conectados y, cuando uno desaparece, cierra su sesión y aplica las reglas de la sección 6.5.
 
-- Dos partidas distintas pueden correr al mismo tiempo sin interferencia, con temas, tiempos y jugadores diferentes.
-- Una falla en una partida no debe tumbar el servidor ni afectar a las demás partidas activas.
+### 8.3 Peticiones y notificaciones
 
-### 8.4 Comunicación en tiempo real
+El intercambio entre cliente y servidor tiene dos direcciones:
+
+- **Peticiones.** Las origina el jugador y esperan respuesta, como `connect`, `create_game`, `add_bot`, `start_game`, `answer`, `score` y `ranking`. El cliente envía la petición y espera a que el servidor conteste con el resultado o con un error de los definidos en la sección 10.
+- **Notificaciones.** Las origina la partida y llegan sin que nadie las pida, como el enunciado de una pregunta, el cierre de una ronda o el ranking final. El cliente no sabe cuándo van a llegar y debe estar listo para recibirlas en cualquier momento.
 
 Para que las notificaciones lleguen mientras el jugador está en la consola:
 
-- Al unirse a una partida, cada jugador registra el PID de su proceso cliente.
-- La partida usa `send` para entregar sus notificaciones a todos los PID registrados.
+- Al crear la partida, el cliente registra en ella el PID del proceso que recibe sus mensajes.
+- La partida usa `send` para entregar sus notificaciones a todos los PID registrados, sin distinguir si son de un cliente en otro nodo o de un bot en el servidor.
 - El cliente separa el proceso que lee del teclado del que recibe mensajes de la partida, de modo que un mensaje entrante no quede bloqueado esperando a que el jugador escriba.
 
-Esta es la parte más delicada del proyecto y conviene resolverla temprano.
+### 8.4 Partidas concurrentes
+
+- Cada partida debe vivir en un proceso `GenServer` independiente, gestionado por un `DynamicSupervisor`.
+- Todas las partidas corren dentro del nodo del servidor, con temas, tiempos y jugadores distintos, sin interferencia entre ellas.
+- El jugador no necesita saber en qué proceso vive su partida. El servidor la ubica a partir de su sesión.
+
+Resultado esperado:
+
+- Dos clientes conectados con usuarios distintos, cada uno con su propia partida y sus bots, juegan al mismo tiempo sin que el temporizador de una partida afecte a la otra.
+- Las notificaciones de una partida llegan solo a sus jugadores.
+- Una falla en una partida no debe tumbar el servidor ni afectar a las demás partidas activas.
+
+### 8.5 Recuperación de partidas
+
+Una partida en curso que falla no puede llevarse consigo el progreso de sus jugadores. El sistema debe reponerla y continuar el juego desde la última ronda cerrada.
+
+- Las partidas se registran en el `DynamicSupervisor` con `restart: :transient`, de modo que se reponen cuando terminan de forma anormal y no cuando terminan bien.
+- Al cerrar cada ronda, la partida le entrega al gestor de partidas su estado completo, que el gestor guarda asociado al `id` de la partida. Cuando la partida termina bien, el gestor borra esa copia.
+- Cuando el supervisor repone la partida, el proceso nuevo le pide al gestor la copia y arranca la ronda siguiente a la última cerrada, con la misma función que inicia cualquier ronda. La ronda que estaba en curso cuando ocurrió la falla se vuelve a jugar desde cero.
+- Los bots se lanzan enlazados a la partida, así que mueren con ella. La partida repuesta los vuelve a lanzar con la misma función que usa `start_game`.
+- El PID del cliente humano sigue siendo válido, porque vive en otro nodo y no se ve afectado por la falla.
+
+Solo se exige recuperar partidas en curso. Si falla una partida que todavía está en `esperando`, basta con cancelarla y avisarle al creador.
+
+Para demostrarlo, desde la consola del servidor se obtiene el PID de una partida en curso y se ejecuta `Process.exit(pid, :kill)`. El gestor de partidas debe ofrecer una función para obtener ese PID a partir del `id` de la partida.
+
+Formato sugerido para el aviso que la partida repuesta envía antes de la pregunta:
+
+```
+La partida P-1001 se recuperó de una falla. Se repite la pregunta 4.
+```
 
 ---
 
 ## 9. Persistencia (Archivos)
 
-| Archivo               | Contenido                                                                             |
-|-----------------------|---------------------------------------------------------------------------------------|
-| `data/users.json`     | usuario, clave, puntaje acumulado, partidas jugadas                                   |
-| `data/questions.json` | banco de preguntas por tema: tema, enunciado, cuatro opciones y respuesta correcta     |
-| `data/results.log`    | historial de partidas: fecha, id, tema, nodo, duración, ganador y puntaje de cada jugador |
+| Archivo               | Contenido                                                                       |
+|-----------------------|---------------------------------------------------------------------------------|
+| `data/users.json`     | usuario y clave                                                                 |
+| `data/questions.json` | banco de preguntas: tema, nivel, enunciado, cuatro opciones y respuesta correcta |
+| `data/results.log`    | historial de partidas: fecha, id, tema, nivel, ganador y puntaje de cada jugador |
 
-Se usa JSON para los datos estructurados porque los enunciados de las preguntas contienen comas y otros signos que complicarían un CSV. La dependencia `jason` se declara en `mix.exs`. El historial `results.log` es texto plano con una línea por partida, pensado para recorrerse con streams al calcular el ranking por tema.
+Se usa JSON para los datos estructurados porque los enunciados de las preguntas contienen comas y otros signos que complicarían un CSV. La dependencia `jason` se declara en `mix.exs`. El historial `results.log` es texto plano con una línea por partida, pensado para recorrerse con streams al calcular el puntaje, las partidas jugadas, el ranking y el nivel de un jugador en un tema.
 
-Requisito: el puntaje acumulado, el número de partidas jugadas y el historial deben mantenerse entre ejecuciones del programa.
+Requisito: los usuarios registrados y el historial deben mantenerse entre ejecuciones del servidor. Todas las estadísticas se reconstruyen a partir del historial.
 
-> **⚠️ Archivos semilla:** El banco `questions.json` lo crea el estudiante como parte del proyecto. Debe incluir al menos **4 temas** con un mínimo de **15 preguntas cada uno**, para que una partida de 5 preguntas pueda sortear sin repetir. Los archivos `users.json` y `results.log` se generan automáticamente al registrar jugadores y al finalizar partidas.
+> **⚠️ Archivos semilla:** El banco `questions.json` lo crea el estudiante como parte del proyecto. Debe incluir al menos **4 temas** con un mínimo de **8 preguntas por nivel en cada tema** (24 por tema), para que una partida de hasta 10 preguntas pueda sortearse sin repetir en cualquiera de los tres niveles. Los archivos `users.json` y `results.log` se generan automáticamente al registrar jugadores y al finalizar partidas.
 
 ---
 
@@ -305,12 +383,17 @@ El sistema debe definir y utilizar errores propios para al menos estas situacion
 
 - Comando ejecutado sin haber iniciado sesión.
 - Clave incorrecta al conectarse con un usuario existente.
-- Ingreso a una partida llena, ya iniciada o inexistente.
-- `start_game` ejecutado por alguien distinto del creador, o con un solo jugador en la partida.
-- Tema inexistente o con menos preguntas de las solicitadas al crear la partida.
-- Respuesta con letra inválida o con un número de pregunta que no corresponde a la ronda en curso.
+- Usuario que ya tiene una sesión abierta en otro cliente.
+- Usuario que empieza por el prefijo reservado `bot_`.
+- Servidor no disponible cuando el cliente intenta conectarse.
+- `create_game` ejecutado por un jugador que ya está en una partida.
+- Tema inexistente, o sin suficientes preguntas de algún nivel para el reparto que corresponde al crear la partida.
+- `add_bot` o `start_game` ejecutados sin estar en una partida.
+- `add_bot` con la partida llena o ya iniciada.
+- `start_game` con menos de dos bots en la partida.
+- Respuesta con letra inválida o enviada cuando no hay una ronda abierta.
 
-En todos los casos el sistema informa el problema y continúa operando. Un error de un jugador no puede tumbar la partida ni el servidor.
+En todos los casos el sistema informa el problema y continúa operando. Un error de un jugador no puede tumbar la partida, el servidor ni los demás clientes.
 
 ---
 
@@ -321,16 +404,17 @@ proyecto_trivia/
 |-- lib/
 |   |-- trivia/
 |   |   |-- servidor.ex             # SERVIDOR: recibe las peticiones y las enruta
-|   |   |-- gestor_jugadores.ex     # SERVIDOR: registro, sesión, puntajes y ranking
-|   |   |-- gestor_partidas.ex      # SERVIDOR: creación, listado e ingreso a partidas
+|   |   |-- gestor_jugadores.ex     # SERVIDOR: registro, sesiones, puntajes y ranking
+|   |   |-- gestor_partidas.ex      # SERVIDOR: creación, ubicación y copia del estado
 |   |   |-- partida.ex              # SERVIDOR: GenServer de partida
 |   |   |-- supervisor_partidas.ex  # SERVIDOR: DynamicSupervisor de partidas
-|   |   |-- banco_preguntas.ex      # SERVIDOR: carga y sorteo de preguntas por tema
+|   |   |-- bot.ex                  # SERVIDOR: jugador automático
+|   |   |-- banco_preguntas.ex      # SERVIDOR: carga y sorteo de preguntas por tema y nivel
+|   |   |-- nivel.ex                # SERVIDOR: nivel del jugador y reparto por nivel
 |   |   |-- persistencia.ex         # SERVIDOR: lectura/escritura de archivos
-|   |   |-- cluster.ex              # SERVIDOR: nodos y asignación distribuida
 |   |   |-- cliente.ex              # CLIENTE: consola del jugador y envío de peticiones
-|   |   |-- receptor.ex             # CLIENTE: recepción de notificaciones del servidor
-|-- data/                           # solo existe en el nodo del servidor
+|   |   |-- receptor.ex             # CLIENTE: recepción de notificaciones de la partida
+|-- data/                           # solo lo usa el nodo del servidor
 |   |-- users.json
 |   |-- questions.json
 |   |-- results.log
@@ -338,19 +422,24 @@ proyecto_trivia/
 |-- mix.exs
 ```
 
-Aunque todo el código se entregue en un mismo proyecto Mix, los módulos marcados como servidor y como cliente se ejecutan en nodos distintos, y el cliente nunca invoca directamente los del servidor.
+Aunque todo el código se entregue en un mismo proyecto Mix, los módulos marcados como servidor y como cliente se ejecutan en nodos distintos, y el cliente nunca invoca directamente los del servidor. Solo le envía peticiones al proceso del servidor y recibe mensajes de la partida.
 
 ---
 
 ## 12. Pruebas Mínimas Requeridas
 
-Programar al menos 5 pruebas con ExUnit que cubran como mínimo:
+Programar al menos 5 pruebas con ExUnit, elegidas de esta lista de 8:
 
-1. Cálculo del puntaje de una ronda con respuesta correcta, incorrecta y sin responder, incluyendo la bonificación por rapidez en distintos momentos y con dos valores de `tiempo_pregunta`.
-2. Sorteo de preguntas: la cantidad solicitada, todas del tema pedido y sin repetir.
-3. Validación de respuestas: se acepta solo la primera de cada jugador y se rechazan letra inválida y número de pregunta fuera de la ronda.
-4. Reglas de ingreso a una partida: rechazar partida llena, partida ya iniciada e inicio por alguien distinto del creador.
-5. Actualización del puntaje acumulado y del historial al terminar una partida.
+1. Cálculo del puntaje de una ronda con respuesta correcta, incorrecta y sin responder en los tres niveles, incluyendo la bonificación por rapidez en distintos momentos y con dos valores de `tiempo_pregunta`.
+2. Sorteo de preguntas: la cantidad solicitada, todas del tema pedido, sin repetir, con la cantidad de cada nivel que indica el reparto y ordenadas de menor a mayor nivel.
+3. Validación de respuestas: se acepta solo la primera de cada jugador y se rechazan la letra inválida y la respuesta que llega sin ronda abierta.
+4. Reglas de armado de una partida: rechazar `add_bot` con la partida llena o ya iniciada, y `start_game` con menos de dos bots.
+5. Estadísticas desde el historial: a partir de líneas de historial se calculan el puntaje acumulado y las partidas jugadas de un jugador, y las entradas de bots se ignoran.
+6. Recuperación de una partida: a partir de la copia guardada al cerrar una ronda, se arranca la ronda siguiente con los mismos jugadores y los mismos puntajes.
+7. Decisión de un bot: devuelve una de las cuatro letras y un retardo dentro del rango de su dificultad.
+8. Nivel del jugador: a partir de líneas de historial se calcula el puntaje por tema y el nivel, incluyendo los valores justo en los umbrales (59, 60, 179 y 180), un puntaje negativo y un tema nunca jugado.
+
+La prueba 7 solo es posible si la decisión del bot está separada del proceso que la ejecuta, y la 8 si el cálculo del nivel recibe las líneas del historial en lugar de abrir el archivo por su cuenta.
 
 ---
 
@@ -358,16 +447,20 @@ Programar al menos 5 pruebas con ExUnit que cubran como mínimo:
 
 Se considera cumplido si:
 
-1. Dos o más jugadores se conectan y juegan una partida completa de principio a fin.
-2. Las preguntas llegan a todos los jugadores al mismo tiempo y el temporizador cierra la ronda cuando vence.
-3. El puntaje se calcula según las reglas definidas y el ranking final de la partida es correcto.
-4. El puntaje acumulado y el historial persisten al reiniciar la aplicación.
-5. Se ejecutan dos partidas simultáneas con temas y tiempos distintos, sin interferencia entre ellas.
-6. Los clientes funcionan sin acceso a los archivos de datos, obteniendo del servidor todo lo que muestran.
-7. Se demuestra ejecución distribuida en al menos 2 nodos, con un jugador conectado a un nodo jugando en una partida alojada en el otro.
-8. El ranking histórico global y el filtrado por tema muestran resultados coherentes con el historial.
-9. Las situaciones de error de la sección 10 se manejan sin tumbar el servidor.
-10. Las pruebas unitarias pasan.
+1. El servidor se levanta en su propia consola y queda esperando clientes.
+2. Un jugador abre un cliente en otra consola, se conecta, agrega dos bots y juega una partida completa de principio a fin.
+3. Dos clientes en consolas separadas, con usuarios distintos, juegan al mismo tiempo cada uno su propia partida con sus bots, con temas y tiempos distintos, sin interferencia entre ellas.
+4. Las preguntas llegan a todos los jugadores de la partida al mismo tiempo y el temporizador cierra la ronda cuando vence.
+5. El puntaje se calcula según las reglas definidas, con los puntos del nivel de cada pregunta, y el ranking final de la partida es correcto.
+6. Las preguntas de una partida respetan el reparto por nivel del creador en el tema, y un jugador que supera un umbral recibe en su siguiente partida de ese tema el reparto del nuevo nivel.
+7. Los bots responden dentro del tiempo, aciertan según su dificultad y el nivel de la pregunta, puntúan y aparecen en el ranking final, sin llegar a `users.json` ni al ranking histórico.
+8. Los clientes funcionan sin acceso a los archivos de datos, obteniendo del servidor todo lo que muestran.
+9. Al cerrar un cliente con su partida en curso, la partida termina según la sección 6.5 y el servidor sigue atendiendo a los demás clientes.
+10. Al matar el proceso de una partida en curso, esta se repone y repite la ronda con los puntajes previos intactos, la otra partida sigue jugándose y el servidor no cae.
+11. Los usuarios y el historial persisten al reiniciar el servidor, y con ellos el puntaje acumulado, las partidas jugadas y el nivel de cada jugador en cada tema.
+12. El ranking histórico global y el filtrado por tema muestran resultados coherentes con el historial.
+13. Las situaciones de error de la sección 10 se manejan sin tumbar el servidor.
+14. Las pruebas unitarias pasan.
 
 ---
 
@@ -375,45 +468,102 @@ Se considera cumplido si:
 
 ### 14.1 Preparación
 
-1. **Servidor:** se levanta el nodo `trivia@host1`, que carga el banco de preguntas y los jugadores registrados, y el nodo `arena@host2`, que queda disponible para alojar partidas.
-2. **Sesión:** Pedro y Carlos abren cada uno su cliente en su propio nodo y ejecutan `connect pedro 1234` y `connect carlos 1234`. Ninguno existía, así que el servidor los registra con puntaje 0.
-3. **Creación:** Pedro ejecuta `create_game tema=ciencia preguntas=5 tiempo=15`. El servidor crea la partida `P-1001` en `arena@host2` y le responde con el identificador.
-4. **Ingreso:** Carlos ejecuta `list_games`, ve `P-1001` y ejecuta `join_game P-1001`. Su cliente queda registrado en la partida aunque esté conectado a otro nodo.
-5. **Inicio:** Pedro ejecuta `start_game`. El servidor sortea 5 preguntas de ciencia y la partida envía la primera a los clientes de ambos.
+1. **Servidor:** en la primera consola se levanta el nodo del servidor, que carga el banco de preguntas y los jugadores registrados y queda esperando clientes.
+2. **Sesión de Pedro:** Pedro abre su cliente en una segunda consola y ejecuta `connect pedro 1234`. No existía, así que el servidor lo registra.
+3. **Partida de Pedro:** Pedro ejecuta `create_game tema=ciencia preguntas=5 tiempo=15`. Como nunca ha jugado ciencia, su nivel en el tema es `basico`. El servidor crea la partida `P-1001` y le responde con el identificador y el nivel.
+4. **Bots de Pedro:** Pedro ejecuta `add_bot dificil` y `add_bot facil`. El servidor agrega a `bot_1` y `bot_2`, y la partida queda con tres jugadores.
+5. **Partida de Carlos:** Carlos abre su cliente en una tercera consola, ejecuta `connect carlos 1234` y crea `P-1002` con tema historia, 10 preguntas y 20 segundos por pregunta. Carlos ya acumula 195 puntos en historia, así que su nivel es `avanzado` y su partida trae 3 preguntas intermedias y 7 avanzadas. Agrega tres bots y ejecuta `start_game`.
+6. **Inicio:** Pedro ejecuta `start_game`. Con nivel `basico` y 5 preguntas, al servidor le corresponde sortear 4 preguntas básicas y 1 intermedia de ciencia, que quedan de últimas. La partida envía la primera a los tres. Desde este momento las dos partidas corren al mismo tiempo.
 
-### 14.2 Rondas representativas
+### 14.2 Rondas representativas de la partida de Pedro
 
 **Ronda 1 - Respuestas dentro del tiempo:**
 
-- Ambos reciben la pregunta sobre el planeta más grande del sistema solar.
-- Pedro responde `answer 1 B` a los 4 segundos → correcto, 10 + 3 de bonificación = +13 (total 13).
-- Carlos responde `answer 1 C` a los 7 segundos → incorrecto, -5 sin bonificación (total -5).
-- Como ya respondieron los dos, la ronda cierra antes de que venza el temporizador.
+- Los tres reciben la pregunta sobre el planeta más grande del sistema solar.
+- `bot_1` decide responder a los 3 segundos y acierta → 10 + 4 de bonificación = +14 (total 14).
+- Pedro responde `answer B` a los 4 segundos → correcto, 10 + 3 de bonificación = +13 (total 13).
+- `bot_2` responde a los 9 segundos y falla → -5 sin bonificación (total -5).
+- Como ya respondieron los tres, la ronda cierra antes de que venza el temporizador.
 
 **Ronda 2 - Vence el temporizador:**
 
-- Carlos responde `answer 2 A` a los 9 segundos → correcto, 10 + 2 de bonificación = +12 (total 7).
+- `bot_1` responde a los 2 segundos y acierta → 10 + 4 de bonificación = +14 (total 28).
+- `bot_2` responde a los 8 segundos y acierta → 10 + 2 de bonificación = +12 (total 7).
 - Pedro no alcanza a responder. Al vencer los 15 segundos la ronda cierra y su respuesta cuenta como sin responder, 0 puntos (total 13).
+- Un segundo después, Pedro envía `answer C`. Llega durante la pausa entre rondas, así que el sistema la rechaza y no cuenta para la pregunta 3.
 
 **Ronda 3 - Respuesta rechazada:**
 
-- Pedro escribe `answer 2 D`. El número no corresponde a la ronda en curso, así que el sistema rechaza la respuesta e informa el error sin penalizarlo.
-- Pedro corrige con `answer 3 A` a los 6 segundos → correcto, 10 + 3 de bonificación = +13 (total 26). El tiempo perdido en el intento rechazado le costó bonificación, no puntos.
+- Pedro escribe `answer E`. La letra no es válida, así que el sistema rechaza la respuesta e informa el error sin consumir su respuesta.
+- Pedro corrige con `answer A` a los 6 segundos → correcto, 10 + 3 de bonificación = +13 (total 26). El tiempo perdido en el intento rechazado le costó bonificación, no puntos.
 
-### 14.3 Cierre de la partida
+Mientras tanto, Carlos recibe en su consola solo las preguntas de historia de `P-1002`, cada una con sus 20 segundos.
 
-1. Después de la ronda 5, el sistema muestra el ranking con correctas, incorrectas, sin responder, bonificación acumulada y puntaje de cada jugador.
-2. Se persiste el resultado como indica la sección 7.
-3. Verificación sugerida: ejecutar `score` y `ranking ciencia` para confirmar los cambios.
+### 14.3 Caída y recuperación
+
+- Con la ronda 4 de `P-1001` en curso, desde la consola del servidor se obtiene el PID de la partida y se ejecuta `Process.exit(pid_partida, :kill)`.
+- Los dos bots, que estaban enlazados a la partida, mueren con ella.
+- El `DynamicSupervisor` repone la partida, que le pide al gestor la copia guardada al cerrar la ronda 3 y arranca la ronda 4 con los puntajes de las tres rondas anteriores.
+- La partida vuelve a lanzar los dos bots, y los tres jugadores reciben el aviso de recuperación y la pregunta 4 otra vez, con el temporizador desde cero.
+- La partida `P-1002` de Carlos sigue su curso sin enterarse de nada.
+
+### 14.4 Cierre de la partida
+
+1. La ronda 5 es la pregunta intermedia. Pedro la responde bien a los 5 segundos → 15 + 3 de bonificación = +18.
+2. El sistema muestra en la consola de Pedro el ranking con el puntaje de cada jugador y el ganador.
+3. Se persiste el resultado como indica la sección 7.
+4. Verificación sugerida: ejecutar `score` y `ranking ciencia` para confirmar los cambios y comprobar que los bots no aparecen. Si con esta partida Pedro llega a 60 puntos en ciencia, `score` ya lo muestra en nivel `intermedio` y su siguiente partida de ciencia trae el reparto de ese nivel.
 
 ---
 
-## 15. Entrega y Evaluación
+## 15. Extensión Opcional - Varios Humanos en la Misma Partida
 
-### 15.1 Entregables
+> **Esta sección no es un requisito.** Un proyecto que cumple las secciones 1 a 14 está completo. Implementar esta extensión suma como trabajo adicional, pero no hacerla no resta nada de la nota.
+
+En el alcance obligatorio cada cliente juega solo contra sus bots. La extensión permite que un jugador conectado desde otro cliente entre a una partida ya creada y compita en ella junto con los bots.
+
+### 15.1 Comandos adicionales
+
+- `list_games`: lista las partidas que aún admiten jugadores.
+- `join_game <id_partida>`: ingresa a una partida en estado `esperando`.
+
+Formato sugerido para `list_games`:
+
+```
+=== Partidas disponibles ===
+ID       Tema       Nivel        Preguntas   Tiempo   Jugadores   Estado
+P-1001   ciencia    basico           5         15s       2/4       esperando
+P-1002   historia   avanzado        10         20s       3/4       esperando
+```
+
+### 15.2 Cambios en las reglas
+
+- Un humano que entra con `join_game` ocupa un cupo igual que un bot. La partida sigue teniendo entre 3 y 4 jugadores, y la condición para iniciarla pasa a ser que el creador tenga al menos dos rivales, sean humanos o bots.
+- Solo el creador puede ejecutar `add_bot` y `start_game`.
+- El nivel de la partida es el del creador en el tema. Los humanos que entran con `join_game` juegan ese mismo reparto, sin importar su propio nivel, y `list_games` muestra el nivel de cada partida para que cada quien decida a cuál unirse.
+- Cuando la partida alcanza 4 jugadores o pasa a estado `en_curso`, deja de admitir ingresos.
+- Si el creador abandona antes de iniciar, la partida se cancela y los demás jugadores quedan libres.
+- Si un humano abandona o se desconecta con la partida en curso y queda al menos otro humano, la partida continúa. Sus rondas restantes se cuentan como sin responder y conserva el puntaje obtenido hasta ese momento.
+- Cuando ya no queda ningún humano en la partida, esta termina y se registra como indica la sección 6.5.
+- La línea del historial incluye el puntaje de todos los humanos de la partida, así que el resultado cuenta en las estadísticas de cada uno.
+
+### 15.3 Errores adicionales
+
+- Ingreso a una partida llena, ya iniciada o inexistente.
+- `add_bot` o `start_game` ejecutados por alguien distinto del creador.
+
+### 15.4 Demostración
+
+Si el grupo implementa la extensión, la muestra en la sustentación con dos clientes que entran a la misma partida y la juegan completa junto con al menos un bot.
+
+---
+
+## 16. Entrega y Evaluación
+
+### 16.1 Entregables
 
 1. **Repositorio Git** con el proyecto Mix completo, siguiendo la arquitectura recomendada e incluyendo el archivo semilla `data/questions.json`.
-2. **Archivo `README.md`** con: integrantes, instrucciones de compilación, cómo levantar el nodo del servidor y los nodos de los clientes, cómo conectarlos (mínimo 2 nodos) y la lista de comandos disponibles.
+2. **Archivo `README.md`** con: integrantes, instrucciones de compilación, cómo levantar el nodo del servidor y los nodos de los clientes, cómo conectarlos y la lista de comandos disponibles.
 3. **Documentación del uso de inteligencia artificial** indicando herramientas y propósito.
-4. **Pruebas ExUnit** (mínimo las 5 de la sección 12) que pasen con `mix test`.
-5. **Sustentación** en vivo demostrando los criterios de aceptación, con el servidor y al menos tres clientes en consolas separadas, dos partidas simultáneas y los dos nodos en ejecución.
+4. **Pruebas ExUnit** (mínimo 5 de las 8 de la sección 12) que pasen con `mix test`.
+5. **Sustentación** en vivo demostrando los criterios de aceptación, con el servidor y al menos dos clientes en consolas separadas, cada uno con su propia partida y sus bots jugando al mismo tiempo, y la caída y recuperación de una partida en curso. La extensión opcional se demuestra solo si se implementó.
