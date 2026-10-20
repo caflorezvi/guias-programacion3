@@ -2,28 +2,27 @@
   <title>Paradigmas de programación</title>
   <desc>Árbol horizontal de paradigmas de programación. La raíz se ramifica en imperativo (cómo hacerlo) y declarativo (qué hacer). Imperativo lleva a procedimental y orientado a objetos; declarativo lleva a funcional y lógico. Cada subparadigma conecta con un recuadro de descripción y lenguajes representativos.</desc>
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </marker>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#888780"/></marker>
+    <marker id="arrow-claro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b4b2a9"/></marker>
   </defs>
 
   <!-- Solid edges: Root -> branches -->
-  <path d="M150 230 C 178 230, 150 120, 178 120" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M150 230 C 178 230, 150 340, 178 340" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M85 208 L85 132 Q85 120 97 120 L179 120" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M85 252 L85 328 Q85 340 97 340 L179 340" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Solid edges: Imperativo -> Procedimental / POO -->
-  <path d="M310 120 C 348 120, 310 70, 348 70" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M310 120 C 348 120, 310 170, 348 170" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M245 97 L245 82 Q245 70 257 70 L349 70" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M245 143 L245 158 Q245 170 257 170 L349 170" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Solid edges: Declarativo -> Funcional / Lógico -->
-  <path d="M310 340 C 348 340, 310 290, 348 290" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <path d="M310 340 C 348 340, 310 390, 348 390" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M245 317 L245 302 Q245 290 257 290 L349 290" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M245 363 L245 378 Q245 390 257 390 L349 390" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrow)"/>
 
   <!-- Dotted edges: Sub -> Detail -->
-  <line x1="470" y1="70"  x2="508" y2="70"  stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
-  <line x1="470" y1="170" x2="508" y2="170" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
-  <line x1="470" y1="290" x2="508" y2="290" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
-  <line x1="470" y1="390" x2="508" y2="390" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <line x1="470" y1="70"  x2="508" y2="70"  stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow-claro)"/>
+  <line x1="470" y1="170" x2="508" y2="170" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow-claro)"/>
+  <line x1="470" y1="290" x2="508" y2="290" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow-claro)"/>
+  <line x1="470" y1="390" x2="508" y2="390" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow-claro)"/>
 
   <!-- Root -->
   <rect x="20" y="208" width="130" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>

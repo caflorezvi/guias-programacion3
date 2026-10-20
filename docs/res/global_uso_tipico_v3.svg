@@ -1,7 +1,7 @@
 <svg width="100%" viewBox="0 0 680 612" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>Registro y búsqueda de inventarios con :global</title>
 <desc>Cada sede registra su proceso de inventario con un nombre global. La tabla de nombres se sincroniza entre los nodos conectados. Un cajero conectado solo a la sede de Armenia busca :inventario_pereira en su copia local de la tabla y le envía el mensaje directamente a Pereira.</desc>
-<defs><marker id="flecha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<defs><marker id="flecha-c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#854F0B"/></marker><marker id="flecha-c2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3B6D11"/></marker><marker id="flecha-c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#185FA5"/></marker></defs>
 <rect x="0" y="0" width="680" height="612" fill="white"/>
 <line x1="95" y1="72" x2="95" y2="592" stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3"/>
 <line x1="255" y1="72" x2="255" y2="592" stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3"/>
@@ -24,17 +24,17 @@
 <text x="255" y="131" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">register_name(</text>
 <text x="255" y="146" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">:inventario_armenia,</text>
 <text x="255" y="161" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">self())</text>
-<line x1="255" y1="171" x2="255" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha)"/>
+<line x1="255" y1="171" x2="255" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha-c1)"/>
 <rect x="338.0" y="115" width="154" height="56" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
 <text x="415" y="131" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">register_name(</text>
 <text x="415" y="146" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">:inventario_pereira,</text>
 <text x="415" y="161" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">self())</text>
-<line x1="415" y1="171" x2="415" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha)"/>
+<line x1="415" y1="171" x2="415" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha-c1)"/>
 <rect x="498.0" y="115" width="154" height="56" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
 <text x="575" y="131" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">register_name(</text>
 <text x="575" y="146" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">:inventario_manizales,</text>
 <text x="575" y="161" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">self())</text>
-<line x1="575" y1="171" x2="575" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha)"/>
+<line x1="575" y1="171" x2="575" y2="195" stroke="#854F0B" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha-c1)"/>
 <rect x="20" y="197" width="640" height="100" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
 <text x="340" y="218" text-anchor="middle" style="font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:13px;font-weight:500;fill:#412402">Tabla global, la misma en todos los nodos conectados</text>
 <line x1="40" y1="226" x2="640" y2="226" stroke="#854F0B" stroke-width="0.3"/>
@@ -49,15 +49,15 @@
 <rect x="18.0" y="357" width="154" height="42" rx="6" fill="#C0DD97" stroke="#3B6D11" stroke-width="0.5"/>
 <text x="95" y="374" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#173404">whereis_name(</text>
 <text x="95" y="390" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#173404">:inventario_pereira)</text>
-<line x1="95" y1="399" x2="95" y2="420" stroke="#3B6D11" stroke-width="0.8" marker-end="url(#flecha)"/>
+<line x1="95" y1="399" x2="95" y2="420" stroke="#3B6D11" stroke-width="0.8" marker-end="url(#flecha-c2)"/>
 <rect x="18.0" y="420" width="154" height="24" rx="4" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
 <text x="95" y="436" text-anchor="middle" style="font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;fill:#173404">→ PID en sede_pereira</text>
 <rect x="173.0" y="424" width="184" height="16" fill="white"/>
 <text x="265" y="436" text-anchor="middle" style="font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;fill:#3D3D3A;font-style:italic">consulta en su copia de la tabla</text>
-<line x1="95" y1="487" x2="413" y2="487" stroke="#185FA5" stroke-width="0.8" marker-end="url(#flecha)"/>
+<line x1="95" y1="487" x2="413" y2="487" stroke="#185FA5" stroke-width="0.8" marker-end="url(#flecha-c3)"/>
 <rect x="105.0" y="467" width="300" height="16" fill="white"/>
 <text x="255" y="479" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">send(pid, {:existencias, self(), "arroz"})</text>
-<line x1="415" y1="532" x2="97" y2="532" stroke="#185FA5" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha)"/>
+<line x1="415" y1="532" x2="97" y2="532" stroke="#185FA5" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#flecha-c3)"/>
 <rect x="160.0" y="512" width="190" height="16" fill="white"/>
 <text x="255" y="524" text-anchor="middle" style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;fill:#0C447C">{:existencias, "arroz", 5}</text>
 <rect x="140.0" y="562" width="400" height="16" fill="white"/>

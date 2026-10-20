@@ -1,53 +1,79 @@
-<svg width="100%" viewBox="0 0 680 540" role="img" xmlns="http://www.w3.org/2000/svg" style="">
-<title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Varios cajeros conectados a la sede de Armenia</title>
-<desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Cuatro nodos cajero con nombres únicos se conectan a la vez al nodo de la sede, cuyo proceso :inventario atiende un mensaje a la vez y responde a cada cajero.</desc>
+<svg width="100%" viewBox="0 0 680 430" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Dos ventas de frijol al mismo tiempo</title>
+<desc>Dos cajeros envían casi al mismo tiempo una venta de 8 unidades de frijol a la sede. Los dos mensajes quedan en la cola del proceso :inventario. La sede atiende el primero, el frijol pasa de 8 a 0 y responde venta_ok al Cajero 1. Luego atiende el segundo, ya no hay existencias y responde error sin_existencias al Cajero 2.</desc>
+<style>
+  text { font-family: "Anthropic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 12px; fill: #3D3D3A; }
+  .c { text-anchor: middle; dominant-baseline: central; }
+  .titulo { font-size: 14px; font-weight: 500; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; }
+  .peq { font-size: 11px; }
+  .cajero { fill: #E6F1FB; stroke: #185FA5; stroke-width: 0.5; }
+  .cajero-t { fill: #0C447C; }
+  .cajero-s { fill: #185FA5; }
+  .sede { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 0.5; }
+  .sede-t { fill: #085041; }
+  .sede-s { fill: #0F6E56; }
+  .cola { fill: #F1EFE8; stroke: #5F5E5A; stroke-width: 0.5; }
+  .msg { fill: #FAEEDA; stroke: #854F0B; stroke-width: 0.5; }
+  .msg-t { fill: #633806; }
+  .vida { stroke: #B4B2A9; stroke-width: 1; stroke-dasharray: 4 4; }
+  .envio { stroke: #185FA5; stroke-width: 1.2; fill: none; }
+  .ok { stroke: #0F6E56; stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+  .error-t { fill: #A32D2D; }
+  .error { stroke: #A32D2D; stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+</style>
 <defs>
-<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
-<mask id="imagine-text-gaps-eskhwv" maskUnits="userSpaceOnUse"><rect x="0" y="0" width="680" height="540" fill="white"/><rect x="256.373" y="237.234375" width="167.253" height="21.515625" fill="black" rx="2"/><rect x="282.736" y="260.484375" width="114.528" height="19.015625" fill="black" rx="2"/><rect x="289.796875" y="280.484375" width="100.40625" height="19.015625" fill="black" rx="2"/><rect x="279.596" y="298.484375" width="120.808" height="19.015625" fill="black" rx="2"/><rect x="46.701" y="53.234375" width="186.599" height="21.53125" fill="black" rx="2"/><rect x="77.147" y="74.484375" width="125.707" height="19.03125" fill="black" rx="2"/><rect x="446.160" y="53.234375" width="187.680" height="21.53125" fill="black" rx="2"/><rect x="491.454" y="74.484375" width="97.092" height="19.03125" fill="black" rx="2"/><rect x="43.996" y="453.25" width="192.007" height="21.515625" fill="black" rx="2"/><rect x="96.223" y="474.484375" width="87.554" height="19.015625" fill="black" rx="2"/><rect x="446.505" y="453.25" width="186.989" height="21.515625" fill="black" rx="2"/><rect x="481.377" y="474.484375" width="117.245" height="19.015625" fill="black" rx="2"/><rect x="270.96875" y="166.078125" width="138.0625" height="19.015625" fill="black" rx="2"/><rect x="258.640625" y="346.078125" width="162.71875" height="19.015625" fill="black" rx="2"/></mask></defs>
+  <marker id="punta-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#185FA5"/></marker>
+  <marker id="punta-verde" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0F6E56"/></marker>
+  <marker id="punta-roja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A32D2D"/></marker>
+</defs>
 
-<g style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
-<rect x="240" y="220" width="200" height="100" rx="12" stroke-width="0.5" style="fill:rgb(225, 245, 238);stroke:rgb(15, 110, 86);color:rgb(0, 0, 0);stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="340" y="248" text-anchor="middle" dominant-baseline="central" style="fill:rgb(8, 80, 65);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">sede_armenia@localhost</text>
-<text x="340" y="270" text-anchor="middle" dominant-baseline="central" style="fill:rgb(15, 110, 86);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">proceso :inventario</text>
-<text x="340" y="290" text-anchor="middle" dominant-baseline="central" style="fill:rgb(15, 110, 86);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">loop con receive</text>
-<text x="340" y="308" text-anchor="middle" dominant-baseline="central" style="fill:rgb(15, 110, 86);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">un mensaje a la vez</text>
-</g>
+<!-- Participantes y líneas de vida -->
+<line class="vida" x1="110" y1="70" x2="110" y2="390"/>
+<line class="vida" x1="340" y1="70" x2="340" y2="390"/>
+<line class="vida" x1="570" y1="70" x2="570" y2="390"/>
 
-<g style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
-<rect x="20" y="40" width="240" height="60" rx="8" stroke-width="0.5" style="fill:rgb(230, 241, 251);stroke:rgb(24, 95, 165);color:rgb(0, 0, 0);stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="140" y="64" text-anchor="middle" dominant-baseline="central" style="fill:rgb(12, 68, 124);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">cajero_a3f2b9c1@localhost</text>
-<text x="140" y="84" text-anchor="middle" dominant-baseline="central" style="fill:rgb(24, 95, 165);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">consulta existencias</text>
-</g>
+<rect class="cajero" x="40" y="20" width="140" height="50" rx="8"/>
+<text class="c titulo cajero-t" x="110" y="38">Cajero 1</text>
+<text class="c cajero-s" x="110" y="56">nodo cajero</text>
 
-<g style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
-<rect x="420" y="40" width="240" height="60" rx="8" stroke-width="0.5" style="fill:rgb(230, 241, 251);stroke:rgb(24, 95, 165);color:rgb(0, 0, 0);stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="540" y="64" text-anchor="middle" dominant-baseline="central" style="fill:rgb(12, 68, 124);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">cajero_7d4e1f08@localhost</text>
-<text x="540" y="84" text-anchor="middle" dominant-baseline="central" style="fill:rgb(24, 95, 165);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">registra una venta</text>
-</g>
+<rect class="sede" x="250" y="20" width="180" height="50" rx="8"/>
+<text class="c titulo sede-t" x="340" y="38">Sede</text>
+<text class="c sede-s" x="340" y="56">proceso :inventario</text>
 
-<g style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
-<rect x="20" y="440" width="240" height="60" rx="8" stroke-width="0.5" style="fill:rgb(230, 241, 251);stroke:rgb(24, 95, 165);color:rgb(0, 0, 0);stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="140" y="464" text-anchor="middle" dominant-baseline="central" style="fill:rgb(12, 68, 124);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">cajero_2e8a5b3d@localhost</text>
-<text x="140" y="484" text-anchor="middle" dominant-baseline="central" style="fill:rgb(24, 95, 165);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">pide el reporte</text>
-</g>
+<rect class="cajero" x="500" y="20" width="140" height="50" rx="8"/>
+<text class="c titulo cajero-t" x="570" y="38">Cajero 2</text>
+<text class="c cajero-s" x="570" y="56">nodo cajero</text>
 
-<g style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
-<rect x="420" y="440" width="240" height="60" rx="8" stroke-width="0.5" style="fill:rgb(230, 241, 251);stroke:rgb(24, 95, 165);color:rgb(0, 0, 0);stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="540" y="464" text-anchor="middle" dominant-baseline="central" style="fill:rgb(12, 68, 124);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">cajero_f1c609ab@localhost</text>
-<text x="540" y="484" text-anchor="middle" dominant-baseline="central" style="fill:rgb(24, 95, 165);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:central">consulta existencias</text>
-</g>
+<!-- Las dos ventas llegan casi al mismo tiempo -->
+<text class="c mono cajero-s" x="222" y="90">{:vender, pid, "frijol", 8}</text>
+<line class="envio" x1="110" y1="102" x2="338" y2="102" marker-end="url(#punta-azul)"/>
+<text class="c mono cajero-s" x="458" y="98">{:vender, pid, "frijol", 8}</text>
+<line class="envio" x1="570" y1="110" x2="342" y2="110" marker-end="url(#punta-azul)"/>
 
-<line x1="200" y1="100" x2="280" y2="220" marker-end="url(#arrow)" stroke="#185FA5" stroke-width="1.5" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<line x1="480" y1="100" x2="400" y2="220" marker-end="url(#arrow)" stroke="#185FA5" stroke-width="1.5" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<line x1="200" y1="440" x2="280" y2="320" marker-end="url(#arrow)" stroke="#185FA5" stroke-width="1.5" mask="url(#imagine-text-gaps-eskhwv)" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<line x1="480" y1="440" x2="400" y2="320" marker-end="url(#arrow)" stroke="#185FA5" stroke-width="1.5" mask="url(#imagine-text-gaps-eskhwv)" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+<!-- Cola de la sede -->
+<rect class="cola" x="262" y="124" width="156" height="78" rx="8"/>
+<text class="c peq" x="340" y="138" fill="#5F5E5A">cola de mensajes</text>
+<rect class="msg" x="272" y="150" width="136" height="20" rx="4"/>
+<text class="c peq msg-t" x="340" y="160">1 · venta del Cajero 1</text>
+<rect class="msg" x="272" y="174" width="136" height="20" rx="4"/>
+<text class="c peq msg-t" x="340" y="184">2 · venta del Cajero 2</text>
 
-<path d="M 280 220 Q 240 160 200 110" marker-end="url(#arrow)" fill="none" stroke="#0F6E56" stroke-dasharray="4 3" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-dasharray:4px, 3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M 400 220 Q 440 160 480 110" marker-end="url(#arrow)" fill="none" stroke="#0F6E56" stroke-dasharray="4 3" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-dasharray:4px, 3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M 280 320 Q 240 380 200 430" marker-end="url(#arrow)" fill="none" stroke="#0F6E56" stroke-dasharray="4 3" mask="url(#imagine-text-gaps-eskhwv)" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-dasharray:4px, 3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M 400 320 Q 440 380 480 430" marker-end="url(#arrow)" fill="none" stroke="#0F6E56" stroke-dasharray="4 3" mask="url(#imagine-text-gaps-eskhwv)" style="fill:none;stroke:rgb(115, 114, 108);color:rgb(0, 0, 0);stroke-width:1.5px;stroke-dasharray:4px, 3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+<!-- Atiende el primer mensaje -->
+<rect class="sede" x="262" y="218" width="156" height="40" rx="6"/>
+<text class="c sede-t" x="340" y="232">atiende el mensaje 1</text>
+<text class="c sede-s" x="340" y="248">frijol: 8 → 0</text>
 
-<text x="340" y="180" text-anchor="middle" style="fill:rgb(61, 61, 58);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">peticiones simultáneas</text>
-<text x="340" y="360" text-anchor="middle" style="fill:rgb(61, 61, 58);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">respuestas independientes</text>
+<text class="c mono sede-s" x="222" y="266">{:venta_ok, "frijol", 0}</text>
+<line class="ok" x1="338" y1="278" x2="112" y2="278" marker-end="url(#punta-verde)"/>
 
+<!-- Atiende el segundo mensaje -->
+<rect class="sede" x="262" y="294" width="156" height="40" rx="6"/>
+<text class="c sede-t" x="340" y="308">atiende el mensaje 2</text>
+<text class="c sede-s" x="340" y="324">frijol: 0, no alcanza</text>
+
+<text class="c mono error-t" x="458" y="342">{:error, :sin_existencias}</text>
+<line class="error" x1="342" y1="354" x2="568" y2="354" marker-end="url(#punta-roja)"/>
+
+<text class="c" x="340" y="414" font-style="italic">La sede atiende un mensaje a la vez, así que la primera venta termina antes de que empiece la segunda</text>
 </svg>
