@@ -1,0 +1,72 @@
+<svg width="100%" viewBox="0 0 680 300" role="img" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+  <title>Inmutabilidad al actualizar una ruta</title>
+  <desc>Tres versiones de la ruta en memoria. La variable ruta sigue asociada a la versión original v0, con cero recorridos. La variable recorrida se asocia primero a v1 y luego a v2, que tiene dos recorridos y está marcada como favorita.</desc>
+  <defs>
+    <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#73726C"/>
+    </marker>
+    <marker id="flecha-var" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#534AB7"/>
+    </marker>
+    <marker id="flecha-tenue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#B4B2A9"/>
+    </marker>
+  </defs>
+
+  <style>
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    .etiqueta { font-size: 14px; font-weight: 600; }
+    .paso { font-size: 11px; fill: #5F5E5A; }
+  </style>
+
+  <!-- Operación que produce cada versión -->
+  <text x="130" y="30" text-anchor="middle" class="mono paso">%Ruta{...}</text>
+  <text x="340" y="30" text-anchor="middle" class="mono paso">%{ruta | recorridos: 1}</text>
+  <text x="550" y="22" text-anchor="middle" class="mono paso">%{recorrida | recorridos: 2,</text>
+  <text x="550" y="37" text-anchor="middle" class="mono paso">favorita: true}</text>
+
+  <!-- v0: ruta original -->
+  <rect x="40" y="50" width="180" height="120" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+  <text x="130" y="72" text-anchor="middle" class="sans etiqueta" fill="#444441">v0</text>
+  <text x="60" y="98" class="mono" fill="#5F5E5A">%Ruta{</text>
+  <text x="60" y="114" class="mono" fill="#5F5E5A">  nombre: ...,</text>
+  <text x="60" y="130" class="mono" fill="#5F5E5A">  recorridos: 0,</text>
+  <text x="60" y="146" class="mono" fill="#5F5E5A">  favorita: false</text>
+  <text x="60" y="162" class="mono" fill="#5F5E5A">}</text>
+
+  <line x1="220" y1="110" x2="248" y2="110" stroke="#73726C" stroke-width="1.5" marker-end="url(#flecha)"/>
+
+  <!-- v1: primera actualización -->
+  <rect x="250" y="50" width="180" height="120" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+  <text x="340" y="72" text-anchor="middle" class="sans etiqueta" fill="#085041">v1</text>
+  <text x="270" y="98" class="mono" fill="#0F6E56">%Ruta{</text>
+  <text x="270" y="114" class="mono" fill="#0F6E56">  nombre: ...,</text>
+  <text x="270" y="130" class="mono" fill="#0F6E56" font-weight="700">  recorridos: 1,</text>
+  <text x="270" y="146" class="mono" fill="#0F6E56">  favorita: false</text>
+  <text x="270" y="162" class="mono" fill="#0F6E56">}</text>
+
+  <line x1="430" y1="110" x2="458" y2="110" stroke="#73726C" stroke-width="1.5" marker-end="url(#flecha)"/>
+
+  <!-- v2: segunda actualización -->
+  <rect x="460" y="50" width="180" height="120" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1"/>
+  <text x="550" y="72" text-anchor="middle" class="sans etiqueta" fill="#633806">v2</text>
+  <text x="480" y="98" class="mono" fill="#854F0B">%Ruta{</text>
+  <text x="480" y="114" class="mono" fill="#854F0B">  nombre: ...,</text>
+  <text x="480" y="130" class="mono" fill="#854F0B" font-weight="700">  recorridos: 2,</text>
+  <text x="480" y="146" class="mono" fill="#854F0B" font-weight="700">  favorita: true</text>
+  <text x="480" y="162" class="mono" fill="#854F0B">}</text>
+
+  <!-- Variable ruta: siempre asociada a v0 -->
+  <rect x="75" y="235" width="110" height="40" rx="20" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+  <text x="130" y="260" text-anchor="middle" class="mono" font-size="14" fill="#3C3489">ruta</text>
+  <line x1="130" y1="235" x2="130" y2="174" stroke="#534AB7" stroke-width="1.5" marker-end="url(#flecha-var)"/>
+
+  <!-- Variable recorrida: primero v1, después v2 -->
+  <rect x="495" y="235" width="110" height="40" rx="20" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+  <text x="550" y="260" text-anchor="middle" class="mono" font-size="14" fill="#3C3489">recorrida</text>
+  <line x1="550" y1="235" x2="550" y2="174" stroke="#534AB7" stroke-width="1.5" marker-end="url(#flecha-var)"/>
+  <path d="M 495 250 Q 340 250 340 174" fill="none" stroke="#B4B2A9" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#flecha-tenue)"/>
+  <text x="400" y="230" text-anchor="middle" class="sans paso" font-style="italic">antes</text>
+  <text x="590" y="205" text-anchor="middle" class="sans paso" font-style="italic">ahora</text>
+</svg>
