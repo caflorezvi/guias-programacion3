@@ -1,3 +1,5 @@
+Code.require_file("tarea.exs", __DIR__)
+
 defmodule TareasServidor do
   use GenServer
 

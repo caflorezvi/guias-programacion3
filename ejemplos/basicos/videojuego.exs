@@ -1,4 +1,4 @@
-defmodule Cine do
+defmodule Videojuego do
   def main do
     leer_nombre()
     |> saludar()
@@ -6,7 +6,7 @@ defmodule Cine do
   end
 
   defp saludar(nombre) do
-    "Hola #{nombre}, Bienvenido al sistema de la Sala de Cine Central"
+    "Hola #{nombre}, bienvenido al videojuego Aventura Espacial"
   end
 
   defp imprimir_mensaje(mensaje) do
@@ -19,4 +19,4 @@ defmodule Cine do
   end
 end
 
-Cine.main()
+Videojuego.main()

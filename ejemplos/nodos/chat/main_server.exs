@@ -1,6 +1,6 @@
 # main_server.exs
-Code.require_file("chat_room.exs")
-Code.require_file("chat_server.exs")
+Code.require_file("chat_room.exs", __DIR__)
+Code.require_file("chat_server.exs", __DIR__)
 
 defmodule MainServer do
   def start do

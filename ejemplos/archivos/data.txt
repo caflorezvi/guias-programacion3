@@ -1,0 +1,3 @@
+Elixir es un lenguaje funcional
+Un lenguaje funcional trabaja con funciones puras
+Elixir corre sobre la maquina virtual de Erlang

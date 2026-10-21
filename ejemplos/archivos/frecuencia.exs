@@ -5,8 +5,8 @@ defmodule Frecuencia do
   - Fecha: Octubre 2025
   """
 
-  @input "data.txt"
-  @output "frecuencia.txt"
+  @input Path.join(__DIR__, "data.txt")
+  @output Path.join(__DIR__, "frecuencia.txt")
 
   def main do
     File.read(@input)

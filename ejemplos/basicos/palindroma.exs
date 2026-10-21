@@ -18,7 +18,7 @@ defmodule Palindroma do
   Verifica si una cadena de texto es un palíndromo o no. La función
   es_palindroma_v1?/1 utiliza un enfoque imperativo.
   """
-  defp es_palindroma_v1?(cadena_texto) do
+  def es_palindroma_v1?(cadena_texto) do
     cadena_tratada = String.downcase(cadena_texto) # Convierte a minúsculas
     |> String.replace(" ", "") # Elimina espacios
 
@@ -30,7 +30,7 @@ defmodule Palindroma do
   es_palindroma_v2?/1 utiliza un enfoque funcional ya que se basa en
   la composición de funciones usando pipes.
   """
-  defp es_palindroma_v2?(cadena) do
+  def es_palindroma_v2?(cadena) do
     cadena
     |> String.replace(" ", "") # Elimina espacios
     |> String.downcase() # Convierte a minúsculas
@@ -41,7 +41,7 @@ defmodule Palindroma do
   Verifica si una cadena de texto es un palíndromo o no. La función
   es_palindroma_v3?/1 utiliza un enfoque funcional más conciso.
   """
-  defp es_palindroma_v3?(cadena) do
+  def es_palindroma_v3?(cadena) do
     cadena
     |> String.replace(" ", "")
     |> String.downcase()

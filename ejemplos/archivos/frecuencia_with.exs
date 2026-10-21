@@ -1,6 +1,6 @@
 defmodule Frecuencia do
-  @input "data.txt"
-  @output "frecuencia.txt"
+  @input Path.join(__DIR__, "data.txt")
+  @output Path.join(__DIR__, "frecuencia.txt")
 
   def main do
     # with para manejar múltiples operaciones que pueden fallar
@@ -15,7 +15,8 @@ defmodule Frecuencia do
   end
 
   def contar_frecuencia(contenido) when is_binary(contenido) do
-    resultado = String.downcase() # Convertir a minúsculas
+    resultado = contenido
+    |> String.downcase() # Convertir a minúsculas
     |> String.split() # Dividir en palabras
     |> Enum.frequencies() # Contar frecuencias
     |> Enum.map_join("\n", fn {palabra, frecuencia} -> "#{palabra}: #{frecuencia}" end) # Formatear resultado y unir en una cadena de texto

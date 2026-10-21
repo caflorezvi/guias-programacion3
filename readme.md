@@ -46,10 +46,13 @@ En la carpeta [`ejemplos/`](ejemplos/) encontrarás código de apoyo organizado 
 - [Conceptos básicos](ejemplos/basicos)
 - [Colecciones](ejemplos/colecciones)
 - [Recursividad](ejemplos/recursividad)
+- [Structs](ejemplos/structs)
 - [Archivos](ejemplos/archivos)
 - [Concurrencia](ejemplos/concurrencia)
 - [Nodos distribuidos](ejemplos/nodos)
 - [Talleres](ejemplos/talleres)
+
+Los ejemplos de `basicos/` y `parciales/` usan el módulo `Util`. Antes de ejecutarlos, compílelo desde la carpeta del ejemplo con `elixirc ../util.exs`, que genera el archivo `Elixir.Util.beam` en esa carpeta.
 
 ## Cómo citar
 

@@ -7,7 +7,7 @@ defmodule Inventario do
   - Fecha: Octubre 2025
   """
 
-  @input "productos.csv"
+  @input Path.join(__DIR__, "productos.csv")
 
   def main do
     procesar_sin_stream()

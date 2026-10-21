@@ -10,26 +10,20 @@ defmodule Calculadora do
     |> Util.imprimir_mensaje()
   end
 
-  def validar_operacion(numero1, numero2, operacion) when operacion in 1..4 do
+  defp validar_operacion(numero1, numero2, operacion) when operacion in 1..4 do
     operar(numero1, numero2, operacion)
   end
 
-  def validar_operacion(_, _, _), do: {:error, "Operación no válida."}
+  defp validar_operacion(_, _, _), do: {:error, "Operación no válida."}
 
   defp operar(numero1, numero2, 1), do: {:ok, numero1 + numero2}
   defp operar(numero1, numero2, 2), do: {:ok, numero1 - numero2}
   defp operar(numero1, numero2, 3), do: {:ok, numero1 * numero2}
   defp operar(_numero1, 0, 4), do: {:error, "División por cero no permitida."}
   defp operar(numero1, numero2, 4), do: {:ok, numero1 / numero2}
-  defp operar(_, _, _), do: {:error, "Operación no válida."}
 
-  def generar_mensaje({:ok, resultado}) do
-    "El resultado es: #{resultado}"
-  end
-
-  def generar_mensaje({:error, mensaje}) do
-    "Error: #{mensaje}"
-  end
+  defp generar_mensaje({:ok, resultado}), do: "El resultado es: #{resultado}"
+  defp generar_mensaje({:error, mensaje}), do: "Error: #{mensaje}"
 
 end
 
