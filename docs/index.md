@@ -1,4 +1,4 @@
-Este espacio académico se centra en estudiar todos los aspectos relacionados con la programación funcional. Por tal motivo, emplearemos el lenguaje de programación Elixir, el cual está diseñado para construir aplicaciones concurrentes, escalables y mantenibles, aprovechando al máximo los principios de la programación declarativa y el paradigma funcional. A lo largo del curso exploraremos conceptos fundamentales como funciones puras, inmutabilidad, recursión, composición y estructuras de datos funcionales, así como herramientas y prácticas propias de este enfoque que resultan esenciales para nuestro desarrollo profesional.
+Este espacio académico aborda la programación funcional usando Elixir, un lenguaje diseñado para construir aplicaciones concurrentes, escalables y fáciles de mantener a partir de los principios del paradigma funcional. Se estudian las funciones puras, la inmutabilidad, la recursión, la composición de funciones y las colecciones de datos funcionales, junto con las herramientas y prácticas con las que se desarrolla software bajo este enfoque.
 
 Guías y material de clase:
 
