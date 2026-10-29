@@ -4,7 +4,7 @@ defmodule Notas do
     "Ingrese 1 para calcular la nota del curso 1 (promedio) o 2 para la nota del curso 2 (porcentajes): "
     |> Util.leer(:integer)
     |> procesar()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   defp procesar(curso) when curso == 1 or curso == 2, do: calcular_y_generar_mensaje(curso)

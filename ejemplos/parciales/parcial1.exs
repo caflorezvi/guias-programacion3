@@ -12,7 +12,7 @@ defmodule EmpresaTransporte do
 
     calcular_precio_final(precio_distancia, descuento_tipo, recargo_horario)
     |> generar_mensaje
-    |> Util.imprimir_mensaje
+    |> Util.imprimir
   end
 
   defp obtener_precio(distancia) when distancia > 0 and distancia <= 5, do: 2500
@@ -54,16 +54,16 @@ defmodule Juego do
     numero_1 = Util.leer("Ingrese el primer número ", :integer)
 
     {gano, mensaje} = calcular_diferencia(numero_1, aleatorio, 1)
-    Util.imprimir_mensaje(mensaje)
+    Util.imprimir(mensaje)
 
     if not gano do
       numero_2 = Util.leer("Ingrese el segundo número ", :integer)
 
       {_, mensaje} = calcular_diferencia(numero_2, aleatorio, 2)
-      Util.imprimir_mensaje(mensaje)
+      Util.imprimir(mensaje)
     end
 
-    Util.imprimir_mensaje("El número era: #{aleatorio}")
+    Util.imprimir("El número era: #{aleatorio}")
 
   end
 
@@ -96,7 +96,7 @@ defmodule Password do
   def main do
     Util.leer("Ingrese una contraseña: ", :string)
     |> validar()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   defp validar(password) do

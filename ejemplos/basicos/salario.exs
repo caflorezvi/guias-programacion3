@@ -14,7 +14,7 @@ defmodule Salario do
     |> formatear_salario
 
     generar_mensaje(nombre, salario)
-    |> Util.imprimir_mensaje
+    |> Util.imprimir
   end
 
   defp calcular_salario(horas_trabajadas, valor_por_hora), do: horas_trabajadas * valor_por_hora

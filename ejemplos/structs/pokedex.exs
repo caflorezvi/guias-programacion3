@@ -71,7 +71,7 @@ defmodule Pokedex do
         nuevo_mapa
 
       {:error, razon} ->
-        IO.puts("No se pudo registrar a #{nombre}: #{razon}")
+        IO.puts(:standard_error, "No se pudo registrar a #{nombre}: #{razon}")
         pokemones
     end
   end
@@ -83,7 +83,7 @@ defmodule Pokedex do
         nuevo_mapa
 
       {:error, razon} ->
-        IO.puts("El Pokemon #{numero} no pudo aprender #{movimiento}: #{razon}")
+        IO.puts(:standard_error, "El Pokemon #{numero} no pudo aprender #{movimiento}: #{razon}")
         pokemones
     end
   end

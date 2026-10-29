@@ -9,7 +9,7 @@ defmodule EmpresaEnvios do
     nombre_destinatario = leer("Ingrese el nombre del destinatario: ")
     direccion = leer("Ingrese la dirección de envío: ")
     mensaje = generar_mensaje(nombre_usuario, nombre_destinatario, direccion)
-    imprimir_mensaje(mensaje)
+    imprimir(mensaje)
   end
 
   @doc """
@@ -24,7 +24,7 @@ defmodule EmpresaEnvios do
     "El paquete a nombre de #{nombre_usuario} será enviado a #{nombre_destinatario} en la dirección #{direccion}."
   end
 
-  defp imprimir_mensaje(mensaje) do
+  defp imprimir(mensaje) do
     IO.puts(mensaje)
   end
 

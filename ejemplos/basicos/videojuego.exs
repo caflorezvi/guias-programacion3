@@ -2,14 +2,14 @@ defmodule Videojuego do
   def main do
     leer_nombre()
     |> saludar()
-    |> imprimir_mensaje()
+    |> imprimir()
   end
 
   defp saludar(nombre) do
     "Hola #{nombre}, bienvenido al videojuego Aventura Espacial"
   end
 
-  defp imprimir_mensaje(mensaje) do
+  defp imprimir(mensaje) do
     IO.puts(mensaje)
   end
 

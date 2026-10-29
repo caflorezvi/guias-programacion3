@@ -12,7 +12,7 @@ defmodule Frecuencia do
     File.read(@input)
     |> contar_frecuencia()
     |> escribir(@output)
-    |> IO.puts()
+    |> mostrar_resultado()
   end
 
   defp contar_frecuencia({:ok, contenido}) do
@@ -28,12 +28,15 @@ defmodule Frecuencia do
 
   defp escribir({:ok, contenido}, archivo) do
     case File.write(archivo, contenido) do
-      :ok -> "Frecuencia escrita en #{archivo}"
-      {:error, razon} -> "Error al escribir en #{archivo}: #{razon}"
+      :ok -> {:ok, "Frecuencia escrita en #{archivo}"}
+      {:error, razon} -> {:error, "Error al escribir en #{archivo}: #{razon}"}
     end
   end
 
-  defp escribir({:error, contenido}, _archivo), do: contenido
+  defp escribir({:error, mensaje}, _archivo), do: {:error, mensaje}
+
+  defp mostrar_resultado({:ok, mensaje}), do: IO.puts(mensaje)
+  defp mostrar_resultado({:error, mensaje}), do: IO.puts(:standard_error, mensaje)
 
 end
 

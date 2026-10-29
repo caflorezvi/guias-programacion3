@@ -53,7 +53,7 @@ defmodule Reporte do
   end
 
   defp mostrar_resultado({:ok, mensaje}), do: IO.puts(mensaje)
-  defp mostrar_resultado({:error, razon}), do: IO.puts("Error: #{razon}")
+  defp mostrar_resultado({:error, razon}), do: IO.puts(:standard_error, "Error: #{razon}")
 end
 
 Reporte.main()

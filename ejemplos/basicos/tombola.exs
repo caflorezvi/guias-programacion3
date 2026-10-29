@@ -6,7 +6,7 @@ defmodule Tombola do
     "Ingrese el número con el que desea participar (#{@minimo} a #{@maximo}): "
     |> Util.leer(:integer)
     |> participar()
-    |> Util.imprimir_mensaje()
+    |> Util.imprimir()
   end
 
   defp participar(numero) when numero in @minimo..@maximo do

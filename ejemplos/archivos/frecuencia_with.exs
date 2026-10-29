@@ -10,7 +10,7 @@ defmodule Frecuencia do
       IO.puts("Frecuencia escrita en #{@output}")
     else
       {:error, razon} ->
-        IO.puts("Error: #{razon}")
+        IO.puts(:standard_error, "Error: #{razon}")
     end
   end
 

@@ -6,8 +6,7 @@ defmodule Calculadora do
     operacion = Util.leer("Escriba 1 para suma, 2 para resta, 3 para multiplicación, 4 para división: ", :integer)
 
     validar_operacion(numero1, numero2, operacion)
-    |> generar_mensaje()
-    |> Util.imprimir_mensaje()
+    |> mostrar_resultado()
   end
 
   defp validar_operacion(numero1, numero2, operacion) when operacion in 1..4 do
@@ -22,8 +21,8 @@ defmodule Calculadora do
   defp operar(_numero1, 0, 4), do: {:error, "División por cero no permitida."}
   defp operar(numero1, numero2, 4), do: {:ok, numero1 / numero2}
 
-  defp generar_mensaje({:ok, resultado}), do: "El resultado es: #{resultado}"
-  defp generar_mensaje({:error, mensaje}), do: "Error: #{mensaje}"
+  defp mostrar_resultado({:ok, resultado}), do: Util.imprimir("El resultado es: #{resultado}")
+  defp mostrar_resultado({:error, mensaje}), do: Util.imprimir("Error: #{mensaje}", :error)
 
 end
 

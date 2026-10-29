@@ -5,7 +5,7 @@ defmodule Anonimizador do
   def main do
     case File.mkdir_p(@salida) do   # Crea la carpeta destino si no existe
       :ok -> anonimizar_carpeta(@carpeta)
-      {:error, razon} -> IO.puts("No se pudo crear la carpeta publicos: #{razon}")
+      {:error, razon} -> IO.puts(:standard_error, "No se pudo crear la carpeta publicos: #{razon}")
     end
   end
 
@@ -47,7 +47,7 @@ defmodule Anonimizador do
   end
 
   defp mostrar_resultado(:ok, nombre), do: IO.puts("Anonimizado: #{nombre} -> publicos/#{nombre}")
-  defp mostrar_resultado({:error, motivo}, nombre), do: IO.puts("No se pudo anonimizar #{nombre}: #{motivo}")
+  defp mostrar_resultado({:error, motivo}, nombre), do: IO.puts(:standard_error, "No se pudo anonimizar #{nombre}: #{motivo}")
 end
 
 Anonimizador.main()

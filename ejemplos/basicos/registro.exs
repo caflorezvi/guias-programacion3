@@ -6,16 +6,16 @@ defmodule Registro do
     email = Util.leer("Ingrese el email: ", :string)
 
     registrar(nombre, edad, email)
-    |> Util.imprimir_mensaje()
+    |> mostrar_resultado()
   end
 
   defp registrar(nombre, edad, email) do
     with {:ok, nombre} <- validar_nombre(nombre),
          {:ok, edad} <- validar_edad(edad),
          {:ok, email} <- validar_email(email) do
-      "Usuario #{nombre} (#{edad} años, #{email}) registrado correctamente."
+      {:ok, "Usuario #{nombre} (#{edad} años, #{email}) registrado correctamente."}
     else
-      {:error, motivo} -> "Error de registro: #{motivo}"
+      {:error, motivo} -> {:error, "Error de registro: #{motivo}"}
     end
   end
 
@@ -37,6 +37,9 @@ defmodule Registro do
       {:error, "El email debe contener el carácter '@'."}
     end
   end
+
+  defp mostrar_resultado({:ok, mensaje}), do: Util.imprimir(mensaje)
+  defp mostrar_resultado({:error, mensaje}), do: Util.imprimir(mensaje, :error)
 
 end
 

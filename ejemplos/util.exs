@@ -47,7 +47,7 @@ defmodule Util do
     case valor do
       {numero, ""} -> numero
       _ ->
-        imprimir_error("Entrada inválida. Debe escribir un número.")
+        imprimir("Entrada inválida. Debe escribir un número.", :error)
         leer_con_parser(mensaje, funcion) # Se vuelve a preguntar hasta recibir un valor válido
     end
   end
@@ -58,11 +58,11 @@ defmodule Util do
 
   ## Ejemplo
 
-      iex> Util.imprimir_error("El valor ingresado no es válido.")
+      iex> Util.imprimir("El valor ingresado no es válido.", :error)
       El valor ingresado no es válido.
       :ok
   """
-  def imprimir_error(mensaje) do
+  def imprimir(mensaje, :error) do
     IO.puts(:standard_error, mensaje)
   end
 
@@ -71,11 +71,11 @@ defmodule Util do
 
   ## Ejemplo
 
-      iex> Util.imprimir_mensaje("Hola")
+      iex> Util.imprimir("Hola")
       Hola
       :ok
   """
-  def imprimir_mensaje(mensaje) do
+  def imprimir(mensaje) do
     IO.puts(mensaje)
   end
 
