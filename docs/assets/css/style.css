@@ -396,6 +396,41 @@ body {
 [data-theme="dark"] .highlight .o { color: #ff7b72; }
 [data-theme="dark"] .highlight .nb { color: #ffa657; }
 
+/* Clases de Rouge que antes no tenían color.
+   ow: when, and, or, not, in · sd/sh: heredocs """ · sx/sc: sigilos y ?a
+   si: interpolación #{} · ss: átomos · no/bp: módulos, true, nil, __MODULE__ */
+[data-theme="light"] .highlight .ow,
+[data-theme="light"] .highlight .kp,
+[data-theme="light"] .highlight .kr,
+[data-theme="light"] .highlight .kc { color: #cf222e; }
+[data-theme="light"] .highlight .sd,
+[data-theme="light"] .highlight .sh,
+[data-theme="light"] .highlight .sb,
+[data-theme="light"] .highlight .sc,
+[data-theme="light"] .highlight .sx,
+[data-theme="light"] .highlight .sr,
+[data-theme="light"] .highlight .se { color: #0a3069; }
+[data-theme="light"] .highlight .si { color: #cf222e; }
+[data-theme="light"] .highlight .ss,
+[data-theme="light"] .highlight .no,
+[data-theme="light"] .highlight .bp { color: #0550ae; }
+
+[data-theme="dark"] .highlight .ow,
+[data-theme="dark"] .highlight .kp,
+[data-theme="dark"] .highlight .kr,
+[data-theme="dark"] .highlight .kc { color: #ff7b72; }
+[data-theme="dark"] .highlight .sd,
+[data-theme="dark"] .highlight .sh,
+[data-theme="dark"] .highlight .sb,
+[data-theme="dark"] .highlight .sc,
+[data-theme="dark"] .highlight .sx,
+[data-theme="dark"] .highlight .sr,
+[data-theme="dark"] .highlight .se { color: #a5d6ff; }
+[data-theme="dark"] .highlight .si { color: #ff7b72; }
+[data-theme="dark"] .highlight .ss,
+[data-theme="dark"] .highlight .no,
+[data-theme="dark"] .highlight .bp { color: #79c0ff; }
+
 /* ============================================
    Footer
    ============================================ */
@@ -433,3 +468,223 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================================
+   Colores de la píldora "Reto" y la tarjeta del proyecto final
+   ============================================ */
+[data-theme="light"] {
+  --reto-borde: #8250df;
+  --reto-fondo: #fbefff;
+}
+
+[data-theme="dark"] {
+  --reto-borde: #ab7df8;
+  --reto-fondo: rgba(171, 125, 248, 0.1);
+}
+
+/* ============================================
+   Píldora "Reto"
+   ============================================ */
+.marca-reto {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: var(--reto-borde);
+  background: var(--reto-fondo);
+  border: 1px solid var(--reto-borde);
+  border-radius: 999px;
+}
+
+/* ============================================
+   3. Cabecera institucional de cada guía
+   ============================================ */
+.guia-cabecera {
+  margin-bottom: 2rem;
+  padding: 1.1rem 1.3rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.guia-cabecera p {
+  margin: 0;
+}
+
+.guia-etiqueta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--link);
+}
+
+.guia-nombre {
+  margin-top: 0.2rem !important;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.guia-datos {
+  margin-top: 0.5rem !important;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ============================================
+   4. Página de inicio
+   ============================================ */
+.portada {
+  padding: 1rem 0 0.5rem;
+}
+
+.portada-curso {
+  margin: 0 !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--link);
+}
+
+.content .portada h1 {
+  margin: 0.3rem 0 0.4rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.portada-resumen {
+  margin: 0 !important;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+}
+
+.content .bloque h2 {
+  font-size: 1.2rem;
+  border-bottom: none;
+  margin-top: 2.5rem;
+}
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.content a.tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+
+.content a.tarjeta:hover {
+  color: var(--text);
+  text-decoration: none;
+  border-color: var(--link);
+  background: var(--bg-secondary);
+  transform: translateY(-1px);
+}
+
+.tarjeta-numero {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--link);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.tarjeta-titulo {
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.content a.tarjeta-proyecto {
+  flex-wrap: wrap;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid var(--reto-borde);
+  background: var(--reto-fondo);
+}
+
+.tarjeta-proyecto .tarjeta-numero {
+  color: var(--reto-borde);
+  background: var(--bg);
+}
+
+.tarjeta-proyecto .tarjeta-titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tarjeta-detalle {
+  flex-basis: 100%;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   5. Navegación anterior / siguiente
+   ============================================ */
+.guia-navegacion {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.content a.guia-enlace {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.content a.guia-enlace:hover {
+  text-decoration: none;
+  border-color: var(--link);
+  background: var(--bg-secondary);
+}
+
+.guia-siguiente {
+  text-align: right;
+}
+
+.guia-direccion {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.guia-enlace-titulo {
+  font-weight: 600;
+  color: var(--link);
+}
+
+@media (max-width: 640px) {
+  .guia-navegacion { grid-template-columns: 1fr; }
+  .guia-navegacion > span:empty { display: none; }
+  .tarjetas { grid-template-columns: 1fr; }
+}

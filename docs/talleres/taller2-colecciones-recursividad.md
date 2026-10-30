@@ -1,9 +1,6 @@
-```
-Universidad del Quindío
-Programa de Ingeniería de Sistemas y Computación
-Programación III - Taller 2: Colecciones y recursividad
-Docente: Carlos Andrés Florez V.
-```
+---
+encabezado: "Taller 2: Colecciones y recursividad"
+---
 
 # Taller 2. Manejo de datos y estructuras funcionales
 

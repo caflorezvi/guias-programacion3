@@ -1,9 +1,6 @@
-```
-Universidad del Quindío
-Programa de Ingeniería de Sistemas y Computación
-Programación III - Taller 1: Fundamentos funcionales
-Docente: Carlos Andrés Florez V.
-```
+---
+encabezado: "Taller 1: Fundamentos funcionales"
+---
 
 # Taller 1. Fundamentos de la programación funcional
 

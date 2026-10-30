@@ -59,3 +59,27 @@
     block.appendChild(button);
   });
 })();
+
+// ============================================
+// Píldora "Reto" en los títulos que terminan en "(reto)"
+// ============================================
+(function() {
+  document.querySelectorAll('.content h3, .content h4').forEach(h => {
+    if (!/\(reto\)\s*$/i.test(h.textContent)) return;
+    h.innerHTML = h.innerHTML.replace(/\s*\(reto\)\s*$/i, '');
+    const marca = document.createElement('span');
+    marca.className = 'marca-reto';
+    marca.textContent = 'Reto';
+    h.appendChild(marca);
+  });
+})();
+
+// ============================================
+// Palabras clave de Elixir que Rouge marca como nombres comunes
+// ============================================
+(function() {
+  const claves = new Set(['with', 'for', 'alias']);
+  document.querySelectorAll('.language-elixir .highlight .n').forEach(span => {
+    if (claves.has(span.textContent)) span.className = 'k';
+  });
+})();

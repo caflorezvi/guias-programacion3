@@ -1,9 +1,6 @@
-```
-Universidad del Quindío
-Programa de Ingeniería de Sistemas y Computación
-Programación III - Taller 3: Archivos, streams y procesos
-Docente: Carlos Andrés Florez V.
-```
+---
+encabezado: "Taller 3: Archivos, streams y procesos"
+---
 
 # Taller 3. Abstracciones funcionales y manejo de efectos
 

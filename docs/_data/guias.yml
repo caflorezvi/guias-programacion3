@@ -1,0 +1,57 @@
+# Orden de las guías. Se usa en el índice (agrupadas por bloque)
+# y en la navegación anterior/siguiente al final de cada guía.
+
+- archivo: 01.paradigmas-programacion.md
+  titulo: Paradigmas de programación
+  bloque: Fundamentos
+- archivo: 02.introduccion-elixir.md
+  titulo: Introducción a Elixir
+  bloque: Fundamentos
+- archivo: 03.programacion-funcional.md
+  titulo: Programación funcional
+  bloque: Fundamentos
+- archivo: 04.conceptos-basicos-elixir.md
+  titulo: Conceptos básicos de Elixir
+  bloque: Fundamentos
+- archivo: 05.expresiones-logico-matematicas.md
+  titulo: Expresiones lógico-matemáticas y estructuras de control
+  bloque: Fundamentos
+- archivo: 06.guards-manejo-resultados.md
+  titulo: Guards y manejo de resultados
+  bloque: Fundamentos
+
+- archivo: 07.colecciones.md
+  titulo: Colecciones en Elixir
+  bloque: Manejo de datos
+- archivo: 08.recursividad.md
+  titulo: Recursividad
+  bloque: Manejo de datos
+- archivo: 09.structs.md
+  titulo: Structs
+  bloque: Manejo de datos
+- archivo: 10.streams.md
+  titulo: Streams
+  bloque: Manejo de datos
+- archivo: 11.archivos.md
+  titulo: Manejo de archivos
+  bloque: Manejo de datos
+
+- archivo: 12.procesos.md
+  titulo: Procesos en Elixir
+  bloque: Concurrencia y distribución
+- archivo: 13.nodos-dist-1.md
+  titulo: Aplicaciones distribuidas 1
+  bloque: Concurrencia y distribución
+- archivo: 14.nodos-dist-2.md
+  titulo: Aplicaciones distribuidas 2
+  bloque: Concurrencia y distribución
+
+- archivo: 15.otp.md
+  titulo: OTP y GenServer
+  bloque: OTP y proyectos
+- archivo: 16.supervisores.md
+  titulo: Supervisores
+  bloque: OTP y proyectos
+- archivo: 17.mix.md
+  titulo: Mix
+  bloque: OTP y proyectos

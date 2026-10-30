@@ -37,8 +37,60 @@
   </header>
 
   <main class="container">
+    {%- comment -%} Posición de la página en _data/guias.yml {%- endcomment -%}
+    {%- assign guias = site.data.guias -%}
+    {%- assign actual = nil -%}
+    {%- for g in guias -%}
+      {%- if g.archivo == page.path -%}
+        {%- assign actual = forloop.index0 -%}
+      {%- endif -%}
+    {%- endfor -%}
+
     <article class="content">
+      {%- if page.encabezado %}
+      <header class="guia-cabecera">
+        <p class="guia-etiqueta">
+          {%- if actual != nil -%}
+            Guía {{ guias[actual].archivo | slice: 0, 2 }} · {{ guias[actual].bloque }}
+          {%- else -%}
+            Programación III
+          {%- endif -%}
+        </p>
+        <p class="guia-nombre">{{ page.encabezado }}</p>
+        <p class="guia-datos">
+          Universidad del Quindío · Programa de Ingeniería de Sistemas y Computación<br>
+          Docente: {{ site.author }}
+        </p>
+      </header>
+      {%- endif %}
+
       {{ content }}
+
+      {%- if actual != nil %}
+      {%- assign total = guias | size | minus: 1 -%}
+      <nav class="guia-navegacion" aria-label="Navegación entre guías">
+        {%- if actual > 0 -%}
+          {%- assign i = actual | minus: 1 -%}
+          {%- assign anterior = guias[i] -%}
+          {%- assign p = site.pages | where: "path", anterior.archivo | first %}
+        <a class="guia-enlace guia-anterior" href="{{ p.url | relative_url }}">
+          <span class="guia-direccion">← Anterior</span>
+          <span class="guia-enlace-titulo">{{ anterior.titulo }}</span>
+        </a>
+        {%- else %}
+        <span></span>
+        {%- endif -%}
+        {%- if actual < total -%}
+          {%- assign i = actual | plus: 1 -%}
+          {%- assign siguiente = guias[i] -%}
+          {%- assign p = site.pages | where: "path", siguiente.archivo | first %}
+        <a class="guia-enlace guia-siguiente" href="{{ p.url | relative_url }}">
+          <span class="guia-direccion">Siguiente →</span>
+          <span class="guia-enlace-titulo">{{ siguiente.titulo }}</span>
+        </a>
+        {%- endif %}
+      </nav>
+      {%- endif %}
     </article>
   </main>
 

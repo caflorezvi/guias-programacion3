@@ -1,9 +1,6 @@
-```
-Universidad del Quindío
-Programa de Ingeniería de Sistemas y Computación
-Programación III - Taller 4: OTP y aplicaciones distribuidas
-Docente: Carlos Andrés Florez V.
-```
+---
+encabezado: "Taller 4: OTP y aplicaciones distribuidas"
+---
 
 # Taller 4. Aplicación práctica: OTP y sistemas distribuidos
 
