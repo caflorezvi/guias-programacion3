@@ -19,7 +19,11 @@ defmodule Descuento do
   defp calcular_descuento(precio, descuento), do: precio - (precio * descuento)
 
   defp generar_mensaje(precio, descuento, precio_final) do
-    "El precio original es: #{:erlang.float_to_binary(precio, decimals: 1)}, el descuento aplicado es: #{descuento * 100}%, y el precio final es: #{precio_final}"
+    """
+    Precio original: #{:erlang.float_to_binary(precio, decimals: 1)}
+    Descuento aplicado: #{descuento * 100}%
+    Precio final: #{precio_final}
+    """
   end
 
 end
