@@ -83,3 +83,58 @@
     if (claves.has(span.textContent)) span.className = 'k';
   });
 })();
+
+// ============================================
+// Interpolación #{...} dentro de heredocs (""") de Elixir
+// Rouge marca todo el heredoc como un solo token (.sd) y no resalta #{...}.
+// Aquí se separan "#{" y "}" con la clase .si, igual que en las cadenas normales.
+// ============================================
+(function() {
+  // Busca el cierre de una interpolación respetando llaves anidadas: #{inspect(%{a: 1})}
+  function cierre(texto, desde) {
+    let nivel = 1;
+    for (let i = desde; i < texto.length; i++) {
+      if (texto[i] === '{') nivel++;
+      else if (texto[i] === '}' && --nivel === 0) return i;
+    }
+    return -1;
+  }
+
+  function span(clase, texto) {
+    const s = document.createElement('span');
+    if (clase) s.className = clase;
+    s.textContent = texto;
+    return s;
+  }
+
+  document.querySelectorAll('.language-elixir .highlight .sd').forEach(sd => {
+    const texto = sd.textContent;
+    if (!texto.includes('#{')) return;
+
+    // Los sigilos en mayúscula (~S""") no interpolan
+    const previo = sd.previousElementSibling;
+    if (/^~[A-Z]/.test(texto) || (previo && /^~[A-Z]/.test(previo.textContent))) return;
+
+    const partes = document.createDocumentFragment();
+    let inicio = 0;
+    let i = texto.indexOf('#{');
+
+    while (i !== -1) {
+      const fin = cierre(texto, i + 2);
+      if (fin === -1) break;
+      // \#{ es un escape: se deja como texto
+      if (texto[i - 1] === '\\') { i = texto.indexOf('#{', i + 2); continue; }
+
+      partes.appendChild(span('sd', texto.slice(inicio, i)));
+      partes.appendChild(span('si', '#{'));
+      partes.appendChild(span('', texto.slice(i + 2, fin)));
+      partes.appendChild(span('si', '}'));
+      inicio = fin + 1;
+      i = texto.indexOf('#{', inicio);
+    }
+
+    if (inicio === 0) return;
+    partes.appendChild(span('sd', texto.slice(inicio)));
+    sd.replaceWith(partes);
+  });
+})();
