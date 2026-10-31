@@ -28,6 +28,9 @@
   --header-bg: rgba(255, 255, 255, 0.72);
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   --blockquote-border: #d1d9e0;
+  --callout-bg: #fff8c5;
+  --callout-border: #e3c35a;
+  --callout-text: #3b2e00;
   --table-stripe: #f6f8fa;
 }
 
@@ -48,6 +51,9 @@
   --header-bg: rgba(13, 17, 23, 0.72);
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   --blockquote-border: #30363d;
+  --callout-bg: #2b2210;
+  --callout-border: #9e6a03;
+  --callout-text: #f0e6c8;
   --table-stripe: #161b22;
 }
 
@@ -209,17 +215,25 @@ body {
   font-weight: 600;
 }
 
+/* Notas y advertencias (> ⚠️ ...): caja amarilla con bordes redondeados */
 .content blockquote {
   margin: 1.5rem 0;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid var(--blockquote-border);
-  background: var(--bg-secondary);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  color: var(--text-muted);
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--callout-border);
+  background: var(--callout-bg);
+  border-radius: var(--radius);
+  color: var(--callout-text);
 }
 
 .content blockquote p {
   margin: 0;
+}
+
+.content blockquote p + p,
+.content blockquote p + pre,
+.content blockquote pre + p,
+.content blockquote div + p {
+  margin-top: 0.6rem;
 }
 
 .content hr {
