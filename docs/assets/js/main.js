@@ -138,3 +138,104 @@
     sd.replaceWith(partes);
   });
 })();
+
+// ============================================
+// Bloques especiales de las guías
+// Se reconocen por su texto, así las guías .md no cambian.
+// ============================================
+(function() {
+  const contenido = document.querySelector('.content');
+  if (!contenido) return;
+
+  // Texto de la etiqueta en negrita o cursiva con que abre un párrafo
+  function etiqueta(p) {
+    const primero = p.firstElementChild;
+    if (!primero || !/^(STRONG|EM)$/.test(primero.tagName)) return '';
+    if (p.firstChild !== primero && p.firstChild.textContent.trim() !== '') return '';
+    return primero.textContent.trim();
+  }
+
+  // 1. Citas (>): las de "Nota", "Sugerencia" y "Buena práctica" pasan a azul
+  contenido.querySelectorAll('blockquote').forEach(cita => {
+    const p = cita.querySelector('p');
+    if (!p) return;
+    if (/^(⚠️|💡)?\s*(Nota|Sugerencia|Buena práctica)\b/.test(p.textContent.trim())) {
+      cita.classList.add('aviso-nota');
+      // Quita el ⚠️ inicial, que en una nota no corresponde
+      const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+      let nodo;
+      while ((nodo = walker.nextNode())) {
+        if (nodo.textContent.trim() === '') continue;
+        nodo.textContent = nodo.textContent.replace(/^\s*⚠️\s*/, '');
+        break;
+      }
+    }
+  });
+
+  // 2. "Nuevo requerimiento:" y 3. "El problema de esta versión."
+  contenido.querySelectorAll('p').forEach(p => {
+    const texto = etiqueta(p);
+    let clase = '';
+    if (/^Nuevo requerimiento:?$/i.test(texto)) clase = 'requerimiento';
+    else if (/^El problema de esta versión\.?$/i.test(texto)) clase = 'problema';
+    if (!clase) return;
+    p.classList.add(clase);
+    const marca = p.firstElementChild;
+    marca.classList.add('bloque-marca');
+    marca.textContent = texto.replace(/[:.]$/, '');
+    // La etiqueta queda en su propia línea: el texto que sigue empieza en mayúscula
+    const resto = marca.nextSibling;
+    if (resto && resto.nodeType === Node.TEXT_NODE) {
+      resto.textContent = resto.textContent.replace(/^\s*(\S)/, (_, c) => c.toUpperCase());
+    }
+  });
+
+  // 4. Pistas plegables: "*Pista:* texto" o "**Pistas:**" seguido de una lista
+  contenido.querySelectorAll('p').forEach(p => {
+    let texto = etiqueta(p);
+    const plano = !texto && p.firstChild && p.firstChild.nodeType === Node.TEXT_NODE &&
+                  /^\s*Pistas?:/.test(p.firstChild.textContent);
+    if (plano) {
+      texto = p.firstChild.textContent.match(/Pistas?:/)[0];
+      p.firstChild.textContent = p.firstChild.textContent.replace(/^\s*Pistas?:/, '');
+    } else if (!/^Pistas?:?$/i.test(texto)) return;
+
+    const detalles = document.createElement('details');
+    detalles.className = 'pista';
+    const resumen = document.createElement('summary');
+    resumen.textContent = texto.replace(/:$/, '');
+    detalles.appendChild(resumen);
+    const cuerpo = document.createElement('div');
+    detalles.appendChild(cuerpo);
+
+    if (!plano) p.firstElementChild.remove();
+    const resto = p.innerHTML.replace(/^\s+/, '');
+    p.before(detalles);
+    if (resto.trim() !== '') {
+      p.innerHTML = resto.charAt(0).toUpperCase() + resto.slice(1);
+      cuerpo.appendChild(p);
+    } else {
+      p.remove();
+    }
+    const siguiente = detalles.nextElementSibling;
+    if (siguiente && /^(UL|OL)$/.test(siguiente.tagName)) cuerpo.appendChild(siguiente);
+  });
+
+  // 5. Bloques de código sin lenguaje: salida de consola o traza
+  // GitHub Pages los envuelve en div.language-plaintext; sin envoltorio quedan como <pre> suelto
+  contenido.querySelectorAll('pre').forEach(pre => {
+    const envoltorio = pre.closest('div.language-plaintext, div.language-text');
+    const enCodigo = pre.closest('.highlighter-rouge, .highlight');
+    if (!envoltorio && enCodigo) return; // tiene lenguaje (elixir, bash...)
+    const bloque = envoltorio || pre;
+    const previo = bloque.previousElementSibling;
+    if (!previo) return;
+    const texto = previo.textContent.trim();
+    if (/^Traza/i.test(texto)) {
+      pre.classList.add('bloque-traza');
+    } else if (previo.matches('.bloque-consola') || previo.querySelector('pre.bloque-consola') ||
+               /(salida|ejecut|debería ver|resultado|con datos|con una|con notas|con cuatro|si la|una división|y una|y con|ahora pruebe)[^.]*:$/i.test(texto)) {
+      pre.classList.add('bloque-consola');
+    }
+  });
+})();

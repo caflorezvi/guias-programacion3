@@ -702,3 +702,163 @@ body {
   .guia-navegacion > span:empty { display: none; }
   .tarjetas { grid-template-columns: 1fr; }
 }
+
+/* ============================================
+   Bloques especiales de las guías (los marca main.js)
+   ============================================ */
+[data-theme="light"] {
+  --nota-fondo: #ddf4ff;
+  --nota-borde: #54aeff;
+  --nota-texto: #0a3069;
+  --req-acento: #0969da;
+  --req-fondo: #f6f8fa;
+  --problema-acento: #cf222e;
+  --problema-fondo: #ffebe9;
+  --pista-acento: #1a7f37;
+  --pista-fondo: #dafbe1;
+  --consola-fondo: #1f2328;
+  --consola-barra: #32383f;
+  --consola-texto: #e6edf3;
+  --traza-acento: #bc4c00;
+}
+
+[data-theme="dark"] {
+  --nota-fondo: rgba(56, 139, 253, 0.1);
+  --nota-borde: #1f6feb;
+  --nota-texto: #cae8ff;
+  --req-acento: #4493f8;
+  --req-fondo: #161b22;
+  --problema-acento: #f85149;
+  --problema-fondo: rgba(248, 81, 73, 0.1);
+  --pista-acento: #3fb950;
+  --pista-fondo: rgba(63, 185, 80, 0.1);
+  --consola-fondo: #010409;
+  --consola-barra: #21262d;
+  --consola-texto: #e6edf3;
+  --traza-acento: #f0883e;
+}
+
+/* Etiqueta pequeña en mayúsculas que abre un bloque */
+.bloque-marca,
+.pista > summary,
+.content pre::before {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* 1. Nota o sugerencia (>): azul */
+.content blockquote.aviso-nota {
+  background: var(--nota-fondo);
+  border-color: var(--nota-borde);
+  color: var(--nota-texto);
+}
+
+/* 2 y 3. Nuevo requerimiento y problema de la versión */
+.content p.requerimiento,
+.content p.problema {
+  margin: 1.5rem 0;
+  padding: 0.8rem 1.1rem;
+  border-left: 4px solid var(--req-acento);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--req-fondo);
+}
+
+.content p.problema {
+  border-left-color: var(--problema-acento);
+  background: var(--problema-fondo);
+}
+
+.content .bloque-marca {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--req-acento);
+}
+
+.content .problema .bloque-marca {
+  color: var(--problema-acento);
+}
+
+/* 4. Pista plegable: verde */
+.content details.pista {
+  margin: 1.5rem 0;
+  border: 1px solid var(--pista-acento);
+  border-radius: var(--radius);
+  background: var(--pista-fondo);
+}
+
+.pista > summary {
+  padding: 0.6rem 1.1rem;
+  color: var(--pista-acento);
+  cursor: pointer;
+  list-style: none;
+}
+
+.pista > summary::-webkit-details-marker { display: none; }
+
+.pista > summary::before {
+  content: "💡 ";
+}
+
+.pista > summary::after {
+  content: " · ver";
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+
+.pista[open] > summary::after { content: " · ocultar"; }
+
+.pista > div {
+  padding: 0 1.1rem 0.8rem;
+}
+
+.pista > div > p,
+.pista > div > ul,
+.pista > div > ol {
+  margin: 0;
+}
+
+/* 5. Salida de consola y traza (bloques de código sin lenguaje) */
+.content pre.bloque-consola,
+.content pre.bloque-traza {
+  padding-top: 2.3rem;
+}
+
+.content pre.bloque-consola::before,
+.content pre.bloque-traza::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.35rem 1rem;
+  font-family: var(--font-sans);
+  border-bottom: 1px solid var(--code-block-border);
+}
+
+.content pre.bloque-consola {
+  background: var(--consola-fondo);
+  border-color: var(--consola-barra);
+}
+
+.content pre.bloque-consola code {
+  color: var(--consola-texto);
+}
+
+.content pre.bloque-consola::before {
+  content: "●  ●  ●   Salida";
+  color: #8d96a0;
+  background: var(--consola-barra);
+  border-bottom-color: var(--consola-barra);
+}
+
+.content pre.bloque-traza {
+  border-left: 4px solid var(--traza-acento);
+}
+
+.content pre.bloque-traza::before {
+  content: "Traza de ejecución";
+  color: var(--traza-acento);
+}
