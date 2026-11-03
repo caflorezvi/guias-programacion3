@@ -172,11 +172,11 @@
     }
   });
 
-  // 2. "Nuevo requerimiento:" y 3. "El problema de esta versión."
+  // 2. "Nuevo requerimiento:" (o "Primer requerimiento:") y 3. "El problema de esta versión."
   contenido.querySelectorAll('p').forEach(p => {
     const texto = etiqueta(p);
     let clase = '';
-    if (/^Nuevo requerimiento:?$/i.test(texto)) clase = 'requerimiento';
+    if (/^(Nuevo|Primer) requerimiento:?$/i.test(texto)) clase = 'requerimiento';
     else if (/^El problema de esta versión\.?$/i.test(texto)) clase = 'problema';
     if (!clase) return;
     p.classList.add(clase);
@@ -221,21 +221,22 @@
     if (siguiente && /^(UL|OL)$/.test(siguiente.tagName)) cuerpo.appendChild(siguiente);
   });
 
-  // 5. Bloques de código sin lenguaje: salida de consola o traza
+  // 5. Salida de consola: bloques marcados en la guía con ```salida
+  contenido.querySelectorAll('.language-salida').forEach(marca => {
+    const pre = marca.tagName === 'PRE' ? marca : (marca.closest('pre') || marca.querySelector('pre'));
+    if (pre) pre.classList.add('bloque-consola');
+  });
+
+  // 6. Traza: bloque sin lenguaje precedido por un párrafo que empieza con "Traza"
   // GitHub Pages los envuelve en div.language-plaintext; sin envoltorio quedan como <pre> suelto
   contenido.querySelectorAll('pre').forEach(pre => {
     const envoltorio = pre.closest('div.language-plaintext, div.language-text');
     const enCodigo = pre.closest('.highlighter-rouge, .highlight');
-    if (!envoltorio && enCodigo) return; // tiene lenguaje (elixir, bash...)
+    if (!envoltorio && enCodigo) return; // tiene lenguaje (elixir, bash, salida...)
     const bloque = envoltorio || pre;
     const previo = bloque.previousElementSibling;
-    if (!previo) return;
-    const texto = previo.textContent.trim();
-    if (/^Traza/i.test(texto)) {
+    if (previo && /^Traza/i.test(previo.textContent.trim())) {
       pre.classList.add('bloque-traza');
-    } else if (previo.matches('.bloque-consola') || previo.querySelector('pre.bloque-consola') ||
-               /(salida|ejecut|debería ver|resultado|con datos|con una|con notas|con cuatro|si la|una división|y una|y con|ahora pruebe)[^.]*:$/i.test(texto)) {
-      pre.classList.add('bloque-consola');
     }
   });
 })();

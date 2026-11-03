@@ -88,7 +88,7 @@ El prefijo `bot_` está reservado para los jugadores automáticos de la sección
 
 Formato sugerido para `score`:
 
-```
+```salida
 === Pedro ===
 Puntaje acumulado: 85
 Partidas jugadas: 6
@@ -100,7 +100,7 @@ historia         13   basico
 
 Formato sugerido para `ranking`:
 
-```
+```salida
 === Ranking global ===
 #    Jugador     Puntaje    Partidas
 1    Ana             120          8
@@ -165,7 +165,7 @@ Cada ronda sigue esta secuencia:
 
 Formato sugerido para el envío de una pregunta:
 
-```
+```salida
 ═══ Pregunta 1 de 5 - Ciencia - Nivel básico ═══
 ¿Cuál es el planeta más grande del sistema solar?
   A) Marte      B) Júpiter      C) Saturno      D) Neptuno
@@ -176,7 +176,7 @@ Respuesta > _
 
 Formato sugerido para el cierre de la ronda:
 
-```
+```salida
 Respuesta correcta: B) Júpiter
 
   bot_1    +14   (total 14)
@@ -253,7 +253,7 @@ Un bot no se desconecta ni abandona la partida.
 
 Al terminar la última ronda, la partida muestra su ranking y persiste el resultado:
 
-```
+```salida
 ═══ Fin de la partida P-1001 (ciencia, nivel básico) ═══
 #    Jugador   Puntaje
 1    Pedro         48
@@ -350,7 +350,7 @@ Una partida que falla no puede tumbar el servidor ni dejar a su jugador esperand
 
 Formato sugerido para el aviso:
 
-```
+```salida
 La partida P-1001 falló y se reinició sin su progreso. Agrega los bots y ejecuta start_game para jugar de nuevo.
 ```
 
@@ -514,7 +514,7 @@ En el alcance obligatorio cada cliente juega solo contra sus bots. La extensión
 
 Formato sugerido para `list_games`:
 
-```
+```salida
 === Partidas disponibles ===
 ID       Tema       Nivel        Preguntas   Tiempo   Jugadores   Estado
 P-1001   ciencia    basico           5         15s       2/4       esperando
