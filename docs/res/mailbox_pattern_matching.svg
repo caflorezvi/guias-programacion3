@@ -1,92 +1,89 @@
-<svg width="100%" viewBox="0 0 680 390" role="img" xmlns="http://www.w3.org/2000/svg">
-<title>Cola de mensajes de la caja</title>
-<desc>Tres emisores envían mensajes a la caja al mismo tiempo. Los mensajes se acumulan en orden en su cola y la caja los atiende uno a la vez con receive, así que el total pasa de 0 a 5000 y luego a 8000 sin que dos ventas se sumen a la vez.</desc>
-<style>
-  text { font-family: "Anthropic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 12px; fill: #3D3D3A; }
-  .c { text-anchor: middle; dominant-baseline: central; }
-  .titulo { font-size: 14px; font-weight: 500; }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10px; }
-  .peq { font-size: 10px; }
-  .envio { font-size: 11px; }
-  .emisor { fill: #EEEDFE; stroke: #534AB7; stroke-width: 0.5; }
-  .emisor-t { fill: #3C3489; }
-  .emisor-s { fill: #534AB7; }
-  .cola { fill: #F1EFE8; stroke: #5F5E5A; stroke-width: 0.5; }
-  .msg { fill: #FAEEDA; stroke: #854F0B; stroke-width: 0.5; }
-  .msg-activo { fill: #FAC775; stroke: #854F0B; stroke-width: 1.5; }
-  .msg-t { fill: #633806; }
-  .actor { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 0.5; }
-  .actor-t { fill: #085041; }
-  .actor-s { fill: #0F6E56; }
-  .flecha { stroke: #73726C; stroke-width: 1; fill: none; }
-</style>
-<defs>
-  <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#73726C"/></marker>
-</defs>
+<svg width="100%" viewBox="0 0 680 346" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Cola de mensajes de la caja</title>
+  <desc>Tres procesos le envían mensajes a la caja. Los mensajes se acumulan en su cola en orden de llegada y la caja los atiende uno a uno con coincidencia de patrones. El total es estado privado de la caja.</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 12px; fill: rgb(61, 61, 58); }
+    .codigo { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+    .centro { text-anchor: middle; }
+    .titulo { font-size: 14px; font-weight: 500; }
+    .pequeno { font-size: 11px; }
+    .emisor { fill: rgb(238, 237, 254); stroke: rgb(83, 74, 183); stroke-width: 0.5; }
+    .emisor-texto { fill: rgb(60, 52, 137); }
+    .emisor-pid { fill: rgb(83, 74, 183); }
+    .cola { fill: rgb(241, 239, 232); stroke: rgb(115, 114, 108); stroke-width: 0.5; }
+    .mensaje { fill: rgb(250, 238, 218); stroke: rgb(133, 79, 11); stroke-width: 0.5; }
+    .mensaje-actual { fill: rgb(250, 199, 117); stroke: rgb(133, 79, 11); stroke-width: 1.5; }
+    .mensaje-texto { fill: rgb(99, 56, 6); }
+    .caja { fill: rgb(225, 245, 238); stroke: rgb(15, 110, 86); stroke-width: 0.5; }
+    .caja-texto { fill: rgb(8, 80, 65); }
+    .interno { fill: rgb(255, 255, 255); stroke: rgb(15, 110, 86); stroke-width: 0.5; }
+    .nota { fill: rgb(241, 239, 232); stroke: rgb(115, 114, 108); stroke-width: 0.5; }
+    .flecha { stroke: rgb(115, 114, 108); stroke-width: 1.2; fill: none; }
+  </style>
+  <defs>
+    <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="rgb(115, 114, 108)"/>
+    </marker>
+  </defs>
 
-<!-- Emisores: A arriba, B centrado con la cola, C abajo -->
-<rect class="emisor" x="20" y="60" width="115" height="50" rx="8"/>
-<text class="c titulo emisor-t" x="77.5" y="78">Emisor A</text>
-<text class="c emisor-s" x="77.5" y="96">#PID&lt;0.50.0&gt;</text>
+  <!-- Emisores, cada uno a la altura de su mensaje en la cola -->
+  <rect x="10" y="80" width="100" height="46" rx="8" class="emisor"/>
+  <text x="60" y="99" class="centro emisor-texto">Emisor A</text>
+  <text x="60" y="116" class="centro pequeno emisor-pid">#PID&lt;0.50.0&gt;</text>
 
-<rect class="emisor" x="20" y="150" width="115" height="50" rx="8"/>
-<text class="c titulo emisor-t" x="77.5" y="168">Emisor B</text>
-<text class="c emisor-s" x="77.5" y="186">#PID&lt;0.51.0&gt;</text>
+  <rect x="10" y="140" width="100" height="46" rx="8" class="emisor"/>
+  <text x="60" y="159" class="centro emisor-texto">Emisor B</text>
+  <text x="60" y="176" class="centro pequeno emisor-pid">#PID&lt;0.51.0&gt;</text>
 
-<rect class="emisor" x="20" y="240" width="115" height="50" rx="8"/>
-<text class="c titulo emisor-t" x="77.5" y="258">Emisor C</text>
-<text class="c emisor-s" x="77.5" y="276">#PID&lt;0.52.0&gt;</text>
+  <rect x="10" y="200" width="100" height="46" rx="8" class="emisor"/>
+  <text x="60" y="219" class="centro emisor-texto">Emisor C</text>
+  <text x="60" y="236" class="centro pequeno emisor-pid">#PID&lt;0.52.0&gt;</text>
 
-<!-- Mailbox -->
-<rect class="cola" x="255" y="60" width="170" height="230" rx="10"/>
-<text class="c titulo" x="340" y="82">Mailbox</text>
-<text class="c" x="340" y="100" fill="#5F5E5A">cola en orden de llegada</text>
+  <!-- Cola de mensajes -->
+  <rect x="260" y="20" width="180" height="242" rx="10" class="cola"/>
+  <text x="350" y="44" class="centro titulo">Cola de mensajes</text>
+  <text x="350" y="62" class="centro pequeno">(mailbox), en orden de llegada</text>
 
-<rect class="msg-activo" x="270" y="118" width="140" height="40" rx="6"/>
-<text class="c msg-t" x="340" y="132">{:sumar, 5000}</text>
-<text class="c peq msg-t" x="340" y="148">1 · atendiendo</text>
+  <rect x="270" y="80" width="160" height="46" rx="6" class="mensaje-actual"/>
+  <text x="350" y="99" class="centro codigo mensaje-texto">{:sumar, 5000}</text>
+  <text x="350" y="116" class="centro pequeno mensaje-texto">1 · atendiendo</text>
 
-<rect class="msg" x="270" y="166" width="140" height="40" rx="6"/>
-<text class="c msg-t" x="340" y="180">{:sumar, 3000}</text>
-<text class="c peq msg-t" x="340" y="196">2 · en espera</text>
+  <rect x="270" y="140" width="160" height="46" rx="6" class="mensaje"/>
+  <text x="350" y="159" class="centro codigo mensaje-texto">{:sumar, 3000}</text>
+  <text x="350" y="176" class="centro pequeno mensaje-texto">2 · en espera</text>
 
-<rect class="msg" x="270" y="214" width="140" height="40" rx="6"/>
-<text class="c msg-t" x="340" y="228">{:total, #PID&lt;0.52.0&gt;}</text>
-<text class="c peq msg-t" x="340" y="244">3 · en espera</text>
+  <rect x="270" y="200" width="160" height="46" rx="6" class="mensaje"/>
+  <text x="350" y="219" class="centro codigo mensaje-texto">{:total, #PID&lt;0.52.0&gt;}</text>
+  <text x="350" y="236" class="centro pequeno mensaje-texto">3 · en espera</text>
 
-<text class="c" x="340" y="273" font-style="italic">cabeza de la cola arriba</text>
+  <!-- Caja -->
+  <rect x="480" y="20" width="190" height="242" rx="10" class="caja"/>
+  <text x="575" y="44" class="centro titulo caja-texto">Caja (actor)</text>
+  <text x="575" y="62" class="centro pequeno caja-texto">#PID&lt;0.60.0&gt;</text>
 
-<!-- Envíos: cada flecha llega al mensaje que agrega a la cola -->
-<line class="flecha" x1="135" y1="85" x2="268" y2="138" marker-end="url(#punta)"/>
-<text class="envio" x="141" y="80">send {:sumar, 5000}</text>
-<line class="flecha" x1="135" y1="175" x2="268" y2="186" marker-end="url(#punta)"/>
-<text class="envio" x="141" y="168">send {:sumar, 3000}</text>
-<line class="flecha" x1="135" y1="265" x2="268" y2="234" marker-end="url(#punta)"/>
-<text class="envio" x="141" y="284">send {:total, self()}</text>
+  <rect x="490" y="76" width="170" height="82" rx="6" class="interno"/>
+  <text x="502" y="96" class="codigo caja-texto">receive do</text>
+  <text x="514" y="114" class="codigo caja-texto">{:sumar, valor} -&gt;</text>
+  <text x="514" y="132" class="codigo caja-texto">{:total, remitente} -&gt;</text>
+  <text x="502" y="150" class="codigo caja-texto">end</text>
 
+  <rect x="490" y="170" width="170" height="80" rx="6" class="interno"/>
+  <text x="575" y="190" class="centro pequeno caja-texto">estado privado</text>
+  <text x="575" y="214" class="centro titulo caja-texto">total</text>
+  <text x="575" y="238" class="centro caja-texto">0 → 5000</text>
 
-<!-- Caja (actor) -->
-<rect class="actor" x="475" y="60" width="185" height="230" rx="10"/>
-<text class="c titulo actor-t" x="567.5" y="82">Caja (actor)</text>
-<text class="c actor-s" x="567.5" y="100">#PID&lt;0.60.0&gt;</text>
+  <!-- Envíos y atención (después de la cola para que se vean las puntas) -->
+  <line x1="110" y1="103" x2="270" y2="103" class="flecha" marker-end="url(#punta)"/>
+  <text x="190" y="96" class="centro codigo">send {:sumar, 5000}</text>
+  <line x1="110" y1="163" x2="270" y2="163" class="flecha" marker-end="url(#punta)"/>
+  <text x="190" y="156" class="centro codigo">send {:sumar, 3000}</text>
+  <line x1="110" y1="223" x2="270" y2="223" class="flecha" marker-end="url(#punta)"/>
+  <text x="190" y="216" class="centro codigo">send {:total, self()}</text>
+  <line x1="430" y1="103" x2="490" y2="103" class="flecha" marker-end="url(#punta)"/>
+  <text x="460" y="96" class="centro pequeno">atiende</text>
 
-<rect class="actor" x="485" y="114" width="165" height="82" rx="6"/>
-<text class="mono actor-t" x="495" y="132">receive do</text>
-<text class="mono actor-s" x="511" y="150">{:sumar, valor} -&gt;</text>
-<text class="mono actor-s" x="511" y="168">{:total, remitente} -&gt;</text>
-<text class="mono actor-t" x="495" y="186">end</text>
-
-<rect x="485" y="206" width="165" height="72" rx="6" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
-<text class="c actor-s peq" x="567.5" y="221">estado privado</text>
-<text class="c titulo actor-t" x="567.5" y="241">total</text>
-<text class="c actor-t" x="567.5" y="261">0 → 5000 → 8000</text>
-
-<!-- La caja toma el mensaje de la cabeza de la cola -->
-<line class="flecha" x1="412" y1="138" x2="484" y2="138" marker-end="url(#punta)"/>
-<text class="c" x="450" y="128">atiende</text>
-
-<!-- Conclusión -->
-<rect class="cola" x="20" y="310" width="640" height="60" rx="8"/>
-<text class="c titulo" x="340" y="332">La caja atiende un mensaje a la vez, aunque los emisores envíen en paralelo</text>
-<text class="c" x="340" y="352" fill="#5F5E5A">ningún otro proceso puede modificar el total al mismo tiempo</text>
+  <!-- Nota -->
+  <rect x="10" y="280" width="660" height="52" rx="8" class="nota"/>
+  <text x="340" y="302" class="centro">La caja atiende un mensaje a la vez, aunque varios procesos le envíen mensajes al mismo tiempo</text>
+  <text x="340" y="320" class="centro pequeno">Solo la caja puede modificar su total</text>
 </svg>
