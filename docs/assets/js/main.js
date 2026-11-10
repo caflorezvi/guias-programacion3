@@ -94,7 +94,7 @@
 // Píldora "Reto" en los títulos que terminan en "(reto)"
 // ============================================
 (function() {
-  document.querySelectorAll('.content h3, .content h4').forEach(h => {
+  document.querySelectorAll('.content h2, .content h3, .content h4').forEach(h => {
     if (!/\(reto\)\s*$/i.test(h.textContent)) return;
     h.innerHTML = h.innerHTML.replace(/\s*\(reto\)\s*$/i, '');
     const marca = document.createElement('span');
