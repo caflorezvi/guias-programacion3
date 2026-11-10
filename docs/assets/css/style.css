@@ -101,6 +101,24 @@ body {
   z-index: 100;
 }
 
+/* Barra de progreso de lectura, sobre el borde inferior del header */
+.barra-progreso {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  pointer-events: none;
+}
+
+.barra-progreso-relleno {
+  height: 100%;
+  background: var(--link);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
 .header-content {
   display: flex;
   align-items: center;

@@ -14,6 +14,36 @@
 })();
 
 // ============================================
+// Barra de progreso de lectura
+// ============================================
+(function() {
+  const relleno = document.querySelector('.barra-progreso-relleno');
+  if (!relleno) return;
+
+  let pendiente = false;
+
+  function actualizar() {
+    const doc = document.documentElement;
+    const recorrido = doc.scrollHeight - window.innerHeight;
+    const avance = recorrido > 0 ? Math.min(window.scrollY / recorrido, 1) : 0;
+    relleno.style.transform = `scaleX(${avance})`;
+    pendiente = false;
+  }
+
+  function solicitar() {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(actualizar);
+  }
+
+  window.addEventListener('scroll', solicitar, { passive: true });
+  window.addEventListener('resize', solicitar);
+  // Las pistas plegables cambian el alto de la página al abrirse
+  document.addEventListener('toggle', solicitar, true);
+  actualizar();
+})();
+
+// ============================================
 // Botón de copiar en bloques de código
 // ============================================
 (function() {
