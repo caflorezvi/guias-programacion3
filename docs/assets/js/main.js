@@ -185,7 +185,8 @@
     return primero.textContent.trim();
   }
 
-  // 1. Citas (>): las de "Nota", "Sugerencia" y "Buena práctica" pasan a azul
+  // 1. Citas (>): las de "Nota", "Sugerencia" y "Buena práctica" pasan a azul;
+  //    las actividades con IA (🤖, 🔮, 🆚, 🐞) pasan a morado
   contenido.querySelectorAll('blockquote').forEach(cita => {
     const p = cita.querySelector('p');
     if (!p) return;
@@ -199,6 +200,8 @@
         nodo.textContent = nodo.textContent.replace(/^\s*⚠️\s*/, '');
         break;
       }
+    } else if (/^(🤖|🔮|🆚|🐞)/u.test(p.textContent.trim())) {
+      cita.classList.add('aviso-ia');
     }
   });
 
@@ -220,18 +223,19 @@
     }
   });
 
-  // 4. Pistas plegables: "*Pista:* texto" o "**Pistas:**" seguido de una lista
+  // 4. Pistas plegables: "*Pista:* texto" o "**Pistas:**" seguido de una lista.
+  //    "**Respuestas:**" funciona igual, con otro ícono
   contenido.querySelectorAll('p').forEach(p => {
     let texto = etiqueta(p);
     const plano = !texto && p.firstChild && p.firstChild.nodeType === Node.TEXT_NODE &&
-                  /^\s*Pistas?:/.test(p.firstChild.textContent);
+                  /^\s*(Pistas?|Respuestas?):/.test(p.firstChild.textContent);
     if (plano) {
-      texto = p.firstChild.textContent.match(/Pistas?:/)[0];
-      p.firstChild.textContent = p.firstChild.textContent.replace(/^\s*Pistas?:/, '');
-    } else if (!/^Pistas?:?$/i.test(texto)) return;
+      texto = p.firstChild.textContent.match(/(Pistas?|Respuestas?):/)[0];
+      p.firstChild.textContent = p.firstChild.textContent.replace(/^\s*(Pistas?|Respuestas?):/, '');
+    } else if (!/^(Pistas?|Respuestas?):?$/i.test(texto)) return;
 
     const detalles = document.createElement('details');
-    detalles.className = 'pista';
+    detalles.className = /^Respuesta/i.test(texto) ? 'pista respuesta' : 'pista';
     const resumen = document.createElement('summary');
     resumen.textContent = texto.replace(/:$/, '');
     detalles.appendChild(resumen);

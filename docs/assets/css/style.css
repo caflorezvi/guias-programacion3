@@ -728,6 +728,9 @@ body {
   --nota-fondo: #ddf4ff;
   --nota-borde: #54aeff;
   --nota-texto: #0a3069;
+  --ia-fondo: #efe5ff;
+  --ia-borde: #b494e8;
+  --ia-texto: #2e1a5c;
   --req-acento: #0969da;
   --req-fondo: #f6f8fa;
   --problema-acento: #cf222e;
@@ -744,6 +747,9 @@ body {
   --nota-fondo: rgba(56, 139, 253, 0.1);
   --nota-borde: #1f6feb;
   --nota-texto: #cae8ff;
+  --ia-fondo: #221a33;
+  --ia-borde: #6e4bb8;
+  --ia-texto: #e6dcf7;
   --req-acento: #4493f8;
   --req-fondo: #161b22;
   --problema-acento: #f85149;
@@ -771,6 +777,13 @@ body {
   background: var(--nota-fondo);
   border-color: var(--nota-borde);
   color: var(--nota-texto);
+}
+
+/* 1b. Actividades con IA (> 🤖, 🔮, 🆚, 🐞): morado */
+.content blockquote.aviso-ia {
+  background: var(--ia-fondo);
+  border-color: var(--ia-borde);
+  color: var(--ia-texto);
 }
 
 /* 2 y 3. Nuevo requerimiento y problema de la versión */
@@ -818,6 +831,8 @@ body {
 .pista > summary::before {
   content: "💡 ";
 }
+
+.pista.respuesta > summary::before { content: "✅ "; }
 
 .pista > summary::after {
   content: " · ver";
