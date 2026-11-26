@@ -293,7 +293,7 @@ La sustentación es grupal, dura quince minutos e incluye la demostración en do
 
 ## Parte F. Uso documentado de inteligencia artificial (0.4)
 
-Pueden apoyarse en alguno de los asistentes del curso (el cuaderno de NotebookLM o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de inteligencia artificial para **construir, evaluar o revisar** cualquier parte de este taller. La condición es que documenten ese uso y reflexionen sobre él. Este es el último taller del semestre, así que la reflexión debe abarcar también cómo cambió su forma de usar estas herramientas a lo largo del curso.
+Pueden apoyarse en alguno de los asistentes del curso (el cuaderno de Gemini Notebook o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de inteligencia artificial para **construir, evaluar o revisar** cualquier parte de este taller. La condición es que documenten ese uso y reflexionen sobre él. Este es el último taller del semestre, así que la reflexión debe abarcar también cómo cambió su forma de usar estas herramientas a lo largo del curso.
 
 ### F.1. Bitácora de uso
 

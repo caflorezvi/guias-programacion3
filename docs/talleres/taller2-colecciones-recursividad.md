@@ -263,7 +263,7 @@ Al final escriba un párrafo comparando esta implementación con la del punto D.
 
 ## Parte E. Uso documentado de inteligencia artificial (0.3)
 
-Si se apoyan en alguno de los asistentes del curso (el cuaderno de NotebookLM o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de IA para resolver, revisar o corregir cualquier punto del taller, documéntenlo. Esta es una versión breve de lo que se pedirá, con más detalle, en los talleres siguientes.
+Si se apoyan en alguno de los asistentes del curso (el cuaderno de Gemini Notebook o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de IA para resolver, revisar o corregir cualquier punto del taller, documéntenlo. Esta es una versión breve de lo que se pedirá, con más detalle, en los talleres siguientes.
 
 ### E.1. Bitácora
 

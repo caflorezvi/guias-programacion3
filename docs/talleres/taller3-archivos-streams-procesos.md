@@ -287,7 +287,7 @@ Esta parte se responde por escrito y debe entregarse **antes** de escribir el c�
 
 ## Parte F. Uso documentado de inteligencia artificial (0.3)
 
-Si se apoyan en alguno de los asistentes del curso (el cuaderno de NotebookLM o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de IA para resolver, revisar o corregir cualquier punto del taller, documéntenlo. Esta es una versión breve de lo que se pedirá, con más detalle, en el taller siguiente.
+Si se apoyan en alguno de los asistentes del curso (el cuaderno de Gemini Notebook o la Gema de Google Gemini, alimentados con las guías) o en otra herramienta de IA para resolver, revisar o corregir cualquier punto del taller, documéntenlo. Esta es una versión breve de lo que se pedirá, con más detalle, en el taller siguiente.
 
 ### F.1. Bitácora
 
